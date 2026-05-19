@@ -15,7 +15,11 @@ export function Reveal({ children, delay = 0, className = "", style, as = "div" 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (typeof IntersectionObserver === "undefined") {
+    // Honor user motion preference — show immediately, no transform/fade.
+    const reduce =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || typeof IntersectionObserver === "undefined") {
       setShown(true);
       return;
     }

@@ -97,7 +97,7 @@ export function AdminDashboard() {
 
       {/* Daily revenue chart */}
       <div
-        className="rounded-2xl p-5 shadow-sm"
+        className="rounded-2xl p-4 md:p-5 shadow-sm overflow-hidden"
         style={{ backgroundColor: "white", border: `1px solid ${PEACH_SOFT}` }}
       >
         <div className="flex items-end justify-between mb-4">
@@ -109,20 +109,23 @@ export function AdminDashboard() {
             Peak: <strong className="text-stone-700">{peso(maxDaily)}</strong>
           </p>
         </div>
-        <div className="flex items-end gap-1.5 h-40">
+        <div className="flex items-stretch gap-0.5 sm:gap-1.5 h-40 md:h-48 pb-6">
           {stats.daily.map((d) => {
             const h = maxDaily ? Math.max(2, (d.revenue / maxDaily) * 100) : 2;
             return (
-              <div key={d.date} className="flex-1 group relative flex flex-col justify-end items-center">
+              <div
+                key={d.date}
+                className="flex-1 relative flex flex-col justify-end group"
+                title={`${shortDate(d.date)} · ${peso(d.revenue)} · ${d.orders} orders`}
+              >
                 <div
                   className="w-full rounded-t-md transition-all"
                   style={{
                     height: `${h}%`,
                     backgroundColor: d.revenue > 0 ? PEACH : "#F1ECDC",
                   }}
-                  title={`${shortDate(d.date)} · ${peso(d.revenue)} · ${d.orders} orders`}
                 />
-                <span className="text-[9px] text-stone-500 mt-1 origin-top-left -rotate-45 whitespace-nowrap">
+                <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 hidden sm:block text-[9px] text-stone-500 whitespace-nowrap">
                   {shortDate(d.date)}
                 </span>
               </div>

@@ -3,6 +3,7 @@ import { MenuCategory, OrderItemType } from "@snb/shared";
 import { useApi } from "../hooks/useApi";
 import { CartActionButton } from "../components/CartActionButton";
 import { Highlight } from "../components/Highlight";
+import { absUrl } from "../lib/absUrl";
 
 const CREAM = "#FBF6EA";
 const FOREST = "#1E3D2F";
@@ -103,13 +104,19 @@ export function MenuPage() {
 
       {/* ============ Filter bar ============ */}
       <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
-        <div className="inline-flex p-1 rounded-full" style={{ backgroundColor: CREAM, border: `1px solid ${PEACH_SOFT}` }}>
+        <div
+          role="group"
+          aria-label="Filter menu by category"
+          className="inline-flex p-1 rounded-full"
+          style={{ backgroundColor: CREAM, border: `1px solid ${PEACH_SOFT}` }}
+        >
           {FILTERS.map((f) => {
             const active = filter === f.v;
             return (
               <button
                 key={f.v}
                 onClick={() => setFilter(f.v)}
+                aria-pressed={active}
                 className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest transition"
                 style={{
                   backgroundColor: active ? PEACH : "transparent",
@@ -133,6 +140,7 @@ export function MenuPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search shakes, snacks, flavors…"
+              aria-label="Search menu items"
               className="flex-1 bg-transparent outline-none text-sm placeholder:text-stone-400"
               style={{ color: FOREST }}
             />
@@ -166,7 +174,7 @@ export function MenuPage() {
               <div className="relative aspect-square overflow-hidden" style={{ backgroundColor: isShake ? "#E9EAD8" : "#F1ECDC" }}>
                 {item.imageUrl ? (
                   <img
-                    src={item.imageUrl}
+                    src={absUrl(item.imageUrl) ?? ""}
                     alt={item.name}
                     loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"

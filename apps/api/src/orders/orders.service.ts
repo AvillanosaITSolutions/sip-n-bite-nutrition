@@ -24,6 +24,10 @@ export class OrdersService {
         paymentMethod: input.paymentMethod ?? PaymentMethod.Online,
         deliveryAddress: input.deliveryAddress ?? null,
         notes: input.notes ?? null,
+        cashReceived:
+          input.cashOnHand !== null && input.cashOnHand !== undefined
+            ? input.cashOnHand.toFixed(2)
+            : null,
         total: "0.00",
         items: [],
       });
@@ -139,6 +143,10 @@ export class OrdersService {
         paymentMethod: PaymentMethod.AtHub,
         deliveryAddress: null,
         notes: noteParts.length ? noteParts.join(" · ") : null,
+        cashReceived:
+          input.cashReceived !== null && input.cashReceived !== undefined
+            ? input.cashReceived.toFixed(2)
+            : null,
         total: "0.00",
         // Walk-ins pay upfront at the counter, so they're paid the moment they're rung up.
         paidAt: new Date(),

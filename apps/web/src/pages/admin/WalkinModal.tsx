@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { OrderItemType } from "@snb/shared";
 import { useApi } from "../../hooks/useApi";
 
@@ -39,6 +39,13 @@ type Line = {
 
 function peso(n: number) {
   return `₱${n.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+const API_URL = import.meta.env.VITE_API_URL as string;
+function absUrl(u: string | null | undefined) {
+  if (!u) return null;
+  if (/^https?:/i.test(u)) return u;
+  return `${API_URL}${u}`;
 }
 
 export function WalkinModal({
@@ -82,6 +89,53 @@ export function WalkinModal({
       setTab("menu");
     }
   }, [open]);
+
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const previouslyFocused = useRef<HTMLElement | null>(null);
+
+  // Lock body scroll + close on Escape + restore focus on close
+  useEffect(() => {
+    if (!open) return;
+    previouslyFocused.current = document.activeElement as HTMLElement | null;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    // Move focus to the dialog so screen readers + keyboard land here.
+    queueMicrotask(() => dialogRef.current?.focus());
+
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        onClose();
+        return;
+      }
+      // Simple focus trap on Tab
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
+          'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        const enabled = Array.from(focusables).filter(
+          (el) => !el.hasAttribute("disabled") && el.offsetParent !== null,
+        );
+        if (enabled.length === 0) return;
+        const first = enabled[0];
+        const last = enabled[enabled.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+      previouslyFocused.current?.focus?.();
+    };
+  }, [open, onClose]);
 
   const total = lines.reduce((s, l) => s + l.unitPrice * l.quantity, 0);
   const cashNum = parseFloat(cash);
@@ -170,7 +224,12 @@ export function WalkinModal({
       onClick={onClose}
     >
       <div
-        className="bg-white w-full max-w-5xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[100vh] md:max-h-[88vh]"
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="walkin-modal-title"
+        tabIndex={-1}
+        className="bg-white w-full max-w-5xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[100vh] md:max-h-[88vh] focus:outline-none"
         style={{ color: FOREST }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -183,7 +242,7 @@ export function WalkinModal({
                 <p className="font-script text-xl" style={{ color: PEACH }}>
                   fast service
                 </p>
-                <h2 className="font-display text-2xl md:text-3xl leading-none">NEW WALK-IN ORDER</h2>
+                <h2 id="walkin-modal-title" className="font-display text-2xl md:text-3xl leading-none">NEW WALK-IN ORDER</h2>
               </div>
               <button
                 onClick={onClose}
@@ -250,7 +309,7 @@ export function WalkinModal({
                       style={{ backgroundColor: "#E9EAD8" }}
                     >
                       {m.imageUrl ? (
-                        <img src={m.imageUrl} alt="" className="w-full h-full object-cover" />
+                        <img src={absUrl(m.imageUrl) ?? ""} alt="" className="w-full h-full object-cover" />
                       ) : (
                         <span className="text-3xl">{m.category === "shake" ? "🥤" : "🍪"}</span>
                       )}
@@ -287,7 +346,7 @@ export function WalkinModal({
                       style={{ backgroundColor: "#F1ECDC" }}
                     >
                       {p.imageUrl ? (
-                        <img src={p.imageUrl} alt="" className="w-full h-full object-contain p-1" />
+                        <img src={absUrl(p.imageUrl) ?? ""} alt="" className="w-full h-full object-contain p-1" />
                       ) : (
                         <span className="text-3xl opacity-50">🌿</span>
                       )}

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useToast } from "../store/toast";
+import { absUrl } from "../lib/absUrl";
 
 const FOREST = "#1E3D2F";
 const PEACH = "#F4A77E";
@@ -10,10 +11,17 @@ export function Toaster() {
   const dismiss = useToast((s) => s.dismiss);
 
   return (
-    <div className="fixed bottom-5 right-5 z-[100] flex flex-col gap-3 pointer-events-none">
+    <div
+      className="fixed bottom-5 right-5 z-[100] flex flex-col gap-3 pointer-events-none"
+      role="region"
+      aria-label="Notifications"
+    >
       {toasts.map((t) => (
         <div
           key={t.id}
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
           className="pointer-events-auto rounded-2xl shadow-xl flex items-center gap-3 p-3 pr-4 w-[320px] max-w-[92vw]"
           style={{
             backgroundColor: FOREST,
@@ -26,7 +34,7 @@ export function Toaster() {
             style={{ backgroundColor: "rgba(244,167,126,0.18)" }}
           >
             {t.imageUrl ? (
-              <img src={t.imageUrl} alt="" className="w-full h-full object-cover" />
+              <img src={absUrl(t.imageUrl) ?? ""} alt="" className="w-full h-full object-cover" />
             ) : (
               <span className="text-xl">🛒</span>
             )}

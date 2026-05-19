@@ -44,7 +44,10 @@ export function NavBar() {
     if (role === Role.PosOperator) return [{ to: "/pos", label: "POS" }];
     const items: NavItem[] = [...PUBLIC_NAV];
     if (isAuthenticated) items.push({ to: "/orders", label: "Orders" });
-    if (role === Role.Admin || role === Role.SuperAdmin) items.push({ to: "/admin", label: "Admin" });
+    if (role === Role.Admin || role === Role.SuperAdmin) {
+      items.push({ to: "/pos", label: "POS" });
+      items.push({ to: "/admin", label: "Admin" });
+    }
     return items;
   }, [isAuthenticated, role]);
 
@@ -58,13 +61,7 @@ export function NavBar() {
     >
       <div className="max-w-7xl mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
         {/* Wordmark */}
-        <Link to="/" className="flex items-center gap-2 group">
-          <span
-            className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-black"
-            style={{ backgroundColor: FOREST, color: PEACH }}
-          >
-            🌿
-          </span>
+        <Link to="/" aria-label="Sip 'N Bite Nutrition — home" className="flex items-center gap-2 group">
           <span className="flex items-baseline gap-1">
             <span
               className="text-lg tracking-tight"
@@ -83,11 +80,12 @@ export function NavBar() {
         </Link>
 
         {/* Center nav (desktop) */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-8" aria-label="Primary">
           {nav.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
+              end
               className={({ isActive }) =>
                 "text-sm font-bold uppercase tracking-[0.18em] transition-opacity " +
                 (isActive ? "opacity-100" : "opacity-60 hover:opacity-100")
@@ -103,11 +101,13 @@ export function NavBar() {
         <div className="flex items-center gap-3">
           <Link
             to="/cart"
+            aria-label={count === 0 ? "Cart, empty" : `Cart, ${count} item${count === 1 ? "" : "s"}`}
             className="inline-flex items-center gap-2 rounded-full pl-4 pr-1.5 py-1.5 text-xs font-bold uppercase tracking-widest shadow-sm hover:opacity-90 transition"
             style={{ backgroundColor: "white", color: FOREST, border: `1px solid ${FOREST}20` }}
           >
             <span>Cart ({count})</span>
             <span
+              aria-hidden="true"
               className="inline-flex items-center justify-center w-6 h-6 rounded-full text-xs"
               style={{ backgroundColor: PEACH, color: FOREST }}
             >
@@ -154,22 +154,31 @@ export function NavBar() {
           <button
             className="md:hidden inline-flex items-center justify-center w-9 h-9 rounded-full"
             onClick={() => setOpen((o) => !o)}
-            aria-label="Toggle menu"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="mobile-nav-drawer"
+            data-on-forest
             style={{ backgroundColor: FOREST, color: CREAM }}
           >
-            {open ? "✕" : "☰"}
+            <span aria-hidden="true">{open ? "✕" : "☰"}</span>
           </button>
         </div>
       </div>
 
       {/* Mobile drawer */}
       {open && (
-        <div className="md:hidden border-t" style={{ borderColor: "rgba(30,61,47,0.08)", backgroundColor: bg }}>
+        <nav
+          id="mobile-nav-drawer"
+          aria-label="Primary mobile"
+          className="md:hidden border-t"
+          style={{ borderColor: "rgba(30,61,47,0.08)", backgroundColor: bg }}
+        >
           <div className="px-6 py-4 flex flex-col gap-3">
             {nav.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
+                end
                 onClick={() => setOpen(false)}
                 className="text-sm font-bold uppercase tracking-[0.18em]"
                 style={{ color: FOREST }}
@@ -197,7 +206,7 @@ export function NavBar() {
               )}
             </div>
           </div>
-        </div>
+        </nav>
       )}
     </header>
   );

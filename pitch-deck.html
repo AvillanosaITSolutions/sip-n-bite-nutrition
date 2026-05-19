@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sip 'N Bite Nutrition — Digital Pitch Deck</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@400;500;600;700&family=Caveat:wght@500;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,400..900,0..100,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --cream: #fbf6ea;
+        --peach: #f4a77e;
+        --peach-soft: #fbd9b8;
+        --mustard: #f5c97f;
+        --forest: #1e3d2f;
+        --olive: #e9ead8;
+        --beige: #f1ecdc;
+        --rust: #7a4438;
+        --good: #dce7da;
+      }
+
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body {
+        font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+        color: var(--forest);
+        background: #d6d3d1;
+        font-optical-sizing: auto;
+        -webkit-font-smoothing: antialiased;
+      }
+      .display, h1, h2, h3 {
+        font-family: "Fraunces", Georgia, serif;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        font-variation-settings: "opsz" 144, "SOFT" 50;
+        line-height: 0.95;
+      }
+      .script { font-family: "Caveat", cursive; font-weight: 500; }
+      .wordmark { font-family: "Archivo Black", sans-serif; letter-spacing: -0.01em; }
+
+      /* ============ DECK STRUCTURE ============ */
+      .deck {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        padding: 24px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      .slide {
+        background: var(--cream);
+        color: var(--forest);
+        aspect-ratio: 16 / 9;
+        width: 100%;
+        border-radius: 24px;
+        padding: 56px 64px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(30,61,47,0.18), 0 2px 8px rgba(30,61,47,0.08);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .slide.dark { background: var(--forest); color: var(--cream); }
+      .slide.mustard { background: var(--mustard); }
+      .slide.peach-soft { background: var(--peach-soft); }
+      .slide.olive { background: var(--olive); }
+      .slide.beige { background: var(--beige); }
+
+      /* slide chrome */
+      .slide-num {
+        position: absolute;
+        bottom: 24px;
+        right: 32px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        opacity: 0.5;
+      }
+      .slide-controls {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 20;
+        background: rgba(251,246,234,0.9);
+        border: 1px solid rgba(30,61,47,0.15);
+        border-radius: 999px;
+        padding: 10px 14px;
+        box-shadow: 0 12px 30px rgba(30,61,47,0.12);
+      }
+      .slide-controls button {
+        border: none;
+        background: var(--forest);
+        color: var(--cream);
+        border-radius: 999px;
+        padding: 10px 16px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .slide-controls button:disabled {
+        opacity: 0.35;
+        cursor: default;
+      }
+      .slide-controls .slide-indicator {
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--forest);
+        white-space: nowrap;
+      }
+      .brand-stamp {
+        position: absolute;
+        top: 24px;
+        left: 32px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        opacity: 0.55;
+      }
+      .brand-stamp.dark-on-light { color: var(--forest); }
+
+      /* typography utilities */
+      .eyebrow {
+        font-family: "Caveat", cursive;
+        font-size: 2rem;
+        color: var(--peach);
+        margin-bottom: -4px;
+        font-weight: 700;
+      }
+      .hero-title { font-size: clamp(3rem, 7vw, 6rem); }
+      .title-md { font-size: clamp(2rem, 4.5vw, 4rem); }
+      .body-md { font-size: 1.05rem; line-height: 1.6; color: rgba(30,61,47,0.78); max-width: 60ch; }
+      .slide.dark .body-md { color: rgba(251,246,234,0.82); }
+
+      /* grid layouts */
+      .two-col { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; height: 100%; }
+      .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+      .four-col { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+      /* tiles / chips */
+      .tile {
+        background: white;
+        border: 1px solid var(--peach-soft);
+        border-radius: 16px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .tile.dark { background: var(--forest); color: var(--cream); border: none; }
+      .tile.peach { background: var(--peach); border: none; }
+      .tile.mustard { background: var(--mustard); border: none; }
+      .tile.olive { background: var(--olive); border: none; }
+      .tile .tile-num {
+        font-family: "Fraunces", serif;
+        font-weight: 900;
+        font-size: 2.5rem;
+        line-height: 1;
+      }
+      .tile .tile-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        opacity: 0.7;
+      }
+      .tile .tile-body { font-size: 0.95rem; line-height: 1.5; opacity: 0.9; }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--peach);
+        color: var(--forest);
+        padding: 8px 16px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+      }
+      .pill.outline { background: transparent; border: 1px solid var(--forest); }
+      .pill.mustard { background: var(--mustard); }
+      .pill.soft { background: var(--peach-soft); }
+
+      /* lists */
+      .checklist { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+      .checklist li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-size: 1rem;
+        line-height: 1.45;
+      }
+      .checklist li::before {
+        content: "✓";
+        flex-shrink: 0;
+        width: 22px;
+        height: 22px;
+        background: var(--mustard);
+        color: var(--forest);
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 900;
+        margin-top: 2px;
+      }
+      .checklist.cross li::before {
+        content: "×";
+        background: var(--rust);
+        color: var(--cream);
+      }
+
+      /* decorative shapes */
+      .blob {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+      }
+      .blob.peach { background: var(--peach); }
+      .blob.mustard { background: var(--mustard); }
+      .blob.olive { background: var(--olive); }
+
+      .label-small {
+        font-size: 11px;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: var(--peach);
+      }
+      .slide.dark .label-small { color: var(--mustard); }
+
+      /* mockup boxes (visual stand-ins) */
+      .mock {
+        background: white;
+        border: 1px solid var(--peach-soft);
+        border-radius: 14px;
+        padding: 16px;
+        font-size: 0.85rem;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .mock-header {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        font-weight: 700;
+        color: var(--peach);
+      }
+      .mock-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        border-bottom: 1px dashed rgba(30,61,47,0.12);
+        font-size: 0.85rem;
+      }
+      .mock-row:last-child { border: 0; }
+      .mock-bar {
+        height: 8px;
+        border-radius: 4px;
+        background: var(--peach-soft);
+        position: relative;
+        overflow: hidden;
+      }
+      .mock-bar > span {
+        position: absolute;
+        inset: 0 auto 0 0;
+        background: var(--peach);
+        border-radius: 4px;
+      }
+
+      /* print + screen sizing helpers */
+      /* Screenshot frames */
+      .screenshot {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        background: white;
+        border: 1px solid var(--peach-soft);
+        box-shadow: 0 8px 24px rgba(30,61,47,0.18);
+      }
+      .screenshot img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .screenshot.contain img { object-fit: contain; background: white; }
+      .screenshot::after {
+        content: attr(data-fallback);
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 24px;
+        background: repeating-linear-gradient(45deg, var(--cream), var(--cream) 10px, var(--peach-soft) 10px, var(--peach-soft) 20px);
+        color: var(--forest);
+        font-family: "Caveat", cursive;
+        font-size: 1.5rem;
+        opacity: 0;
+        transition: opacity 200ms;
+      }
+      /* When the <img> fails to load (or has no src), the wrapper shows fallback. */
+      .screenshot:has(img:not([src])),
+      .screenshot:has(img[src=""]) { /* explicit empty */ }
+      .screenshot img[data-loaded="false"] { opacity: 0; }
+
+      .browser-chrome {
+        background: #e7e5e4;
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+      }
+      .browser-chrome .dot {
+        width: 10px; height: 10px; border-radius: 50%;
+      }
+      .browser-chrome .url {
+        flex: 1;
+        background: white;
+        border-radius: 999px;
+        padding: 3px 12px;
+        font-family: monospace;
+        font-size: 10px;
+        color: var(--forest);
+        margin-left: 8px;
+      }
+      .caption {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: var(--peach);
+        margin-top: 8px;
+      }
+
+      @media (max-width: 900px) {
+        .slide { padding: 32px; aspect-ratio: auto; min-height: 90vh; }
+        .two-col { grid-template-columns: 1fr; gap: 24px; }
+        .three-col { grid-template-columns: 1fr 1fr; }
+        .four-col { grid-template-columns: 1fr 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="deck">
+
+      <!-- ============ 01 · TITLE ============ -->
+      <section class="slide" id="s1" style="background: linear-gradient(135deg, var(--cream) 0%, var(--peach-soft) 100%);">
+        <div class="brand-stamp">Sip 'N Bite · Digital Pitch · 2026</div>
+        <div style="position: absolute; right: -120px; top: -120px;" class="blob peach" data-w="380"></div>
+        <style>.blob[data-w="380"]{width:380px;height:380px;opacity:0.35}</style>
+
+        <div style="max-width: 70%; position: relative; z-index: 2;">
+          <p class="script" style="font-size: 3.5rem; color: var(--peach); margin-bottom: -10px; line-height: 1;">a digital home for</p>
+          <h1 class="display hero-title" style="color: var(--forest);">
+            SIP 'N BITE<br>NUTRITION
+          </h1>
+          <p class="body-md" style="margin-top: 24px; font-size: 1.15rem;">
+            A web platform that brings your hub online — for walk-ins, online orders,
+            inventory, and the story behind every shake.
+          </p>
+          <div style="margin-top: 28px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <span class="pill">Sip 'N Bite Hub</span>
+            <span class="pill mustard">Puerto Princesa, Palawan</span>
+            <span class="pill outline">12 years &amp; counting</span>
+          </div>
+        </div>
+        <div class="slide-num">01</div>
+      </section>
+
+      <!-- ============ 02 · WHO YOU ARE ============ -->
+      <section class="slide olive" id="s2">
+        <div class="brand-stamp dark-on-light">Where you are today</div>
+        <p class="eyebrow">family-owned, community-loved</p>
+        <h2 class="display title-md" style="max-width: 14ch;">A NEIGHBORHOOD WELLNESS HUB</h2>
+        <p class="body-md" style="margin-top: 16px;">
+          June &amp; Janet have been blending shakes, weighing customers in, and serving
+          authentic Herbalife products from Castro Street since 2022. Most days are
+          built around <strong>walk-in regulars</strong> who come for the shake, stay
+          for the chat.
+        </p>
+
+        <div class="three-col" style="margin-top: 32px;">
+          <div class="tile dark">
+            <div class="tile-label" style="color: var(--mustard);">Daily rhythm</div>
+            <p class="tile-num" style="color: var(--cream);">Walk-ins</p>
+            <p class="tile-body">Shakes, snacks, weigh-ins — almost entirely in-person, repeat customers.</p>
+          </div>
+          <div class="tile peach">
+            <div class="tile-label">Product mix</div>
+            <p class="tile-num">3 lines</p>
+            <p class="tile-body">Herbal shakes, high-protein snacks, authentic Herbalife products.</p>
+          </div>
+          <div class="tile mustard">
+            <div class="tile-label">Reputation</div>
+            <p class="tile-num">5.0 ★</p>
+            <p class="tile-body">10+ five-star Google reviews mentioning June &amp; Janet by name.</p>
+          </div>
+        </div>
+        <div class="slide-num">02</div>
+      </section>
+
+      <!-- ============ 03 · WHAT WORKS ============ -->
+      <section class="slide" id="s3">
+        <div class="brand-stamp">Already strong</div>
+        <div class="two-col">
+          <div>
+            <p class="eyebrow">things we don't touch</p>
+            <h2 class="display title-md">WHAT'S ALREADY<br>WORKING</h2>
+            <p class="body-md" style="margin-top: 20px;">
+              Your hub already does the hardest part: making customers feel welcome
+              and serving real food. Our job is to make the rest easier — not change
+              what makes the place special.
+            </p>
+          </div>
+          <ul class="checklist">
+            <li><div><strong>Hands-on prep team.</strong> Shakes &amp; snacks are made fresh by skilled personnel — the bottleneck isn't the kitchen.</div></li>
+            <li><div><strong>Loyal walk-ins.</strong> Regulars know their order. Travellers and locals leave 5-star reviews unprompted.</div></li>
+            <li><div><strong>Authentic Herbalife hub.</strong> Direct-sourced, trusted by the community.</div></li>
+            <li><div><strong>Weigh-in service.</strong> Free wellness coaching when customers ask.</div></li>
+          </ul>
+        </div>
+        <div class="slide-num">03</div>
+      </section>
+
+      <!-- ============ 04 · THE GAPS ============ -->
+      <section class="slide peach-soft" id="s4">
+        <div class="brand-stamp dark-on-light">Quiet pain points</div>
+        <p class="eyebrow">what makes growth hard</p>
+        <h2 class="display title-md">THE GAPS WE<br>CAN CLOSE</h2>
+
+        <div class="four-col" style="margin-top: 32px;">
+          <div class="tile" style="background: white;">
+            <div style="font-size: 1.8rem;">📱</div>
+            <p class="wordmark" style="font-size: 0.95rem; margin-top: 6px;">Social media</p>
+            <p class="tile-body" style="font-size: 0.85rem;">Posts go up sporadically. No one is "in charge" of Instagram &amp; Facebook.</p>
+          </div>
+          <div class="tile" style="background: white;">
+            <div style="font-size: 1.8rem;">📦</div>
+            <p class="wordmark" style="font-size: 0.95rem; margin-top: 6px;">Stock tracking</p>
+            <p class="tile-body" style="font-size: 0.85rem;">Counted by eye. Sold-out moments happen mid-conversation with a customer.</p>
+          </div>
+          <div class="tile" style="background: white;">
+            <div style="font-size: 1.8rem;">📊</div>
+            <p class="wordmark" style="font-size: 0.95rem; margin-top: 6px;">Sales data</p>
+            <p class="tile-body" style="font-size: 0.85rem;">No daily/weekly numbers. Hard to spot which flavors actually move.</p>
+          </div>
+          <div class="tile" style="background: white;">
+            <div style="font-size: 1.8rem;">🛵</div>
+            <p class="wordmark" style="font-size: 0.95rem; margin-top: 6px;">Discoverability</p>
+            <p class="tile-body" style="font-size: 0.85rem;">No web presence. Tourists searching "protein shake Palawan" can't find you.</p>
+          </div>
+        </div>
+
+        <p style="margin-top: 32px; font-size: 0.95rem; max-width: 70ch; opacity: 0.85;">
+          None of these block the hub from running — but each one quietly caps how much it can grow.
+        </p>
+        <div class="slide-num">04</div>
+      </section>
+
+      <!-- ============ 05 · THE SOLUTION ============ -->
+      <section class="slide dark" id="s5">
+        <div class="brand-stamp" style="color: var(--mustard);">Introducing</div>
+        <div class="two-col">
+          <div>
+            <p class="eyebrow" style="color: var(--peach);">one digital home for the hub</p>
+            <h2 class="display title-md" style="color: var(--mustard); font-size: clamp(2.5rem, 5vw, 4.5rem);">SIP 'N BITE,<br>ONLINE.</h2>
+            <p class="body-md" style="margin-top: 20px; color: rgba(251,246,234,0.82);">
+              A custom web platform tuned for a small wellness hub: customer storefront, POS workspace, and admin dashboard — one cohesive system.
+            </p>
+            <div style="margin-top: 22px; display: flex; flex-direction: column; gap: 10px;">
+              <span class="pill mustard" style="align-self: flex-start;">🥤 Customer storefront</span>
+              <span class="pill" style="align-self: flex-start;">🪪 POS workspace</span>
+              <span class="pill soft" style="align-self: flex-start;">📊 Admin dashboard</span>
+            </div>
+          </div>
+          <div>
+            <div class="screenshot">
+              <div class="browser-chrome">
+                <span class="dot" style="background:#ed6a5e;"></span>
+                <span class="dot" style="background:#f4be4f;"></span>
+                <span class="dot" style="background:#62c554;"></span>
+                <span class="url">sipnbite.local</span>
+              </div>
+              <img src="pitch-deck-screenshots/05-landing.png" alt="Sip 'N Bite landing page hero with CRAFTED FOR WELLNESS headline" />
+            </div>
+            <p class="caption" style="color: var(--mustard);">/ · the landing page</p>
+          </div>
+        </div>
+        <div class="slide-num">05</div>
+      </section>
+
+      <!-- ============ 06 · FOR CUSTOMERS ============ -->
+      <section class="slide" id="s6">
+        <div class="brand-stamp">Customer side</div>
+        <div class="two-col">
+          <div>
+            <p class="eyebrow">your hub, on every phone</p>
+            <h2 class="display title-md">A MENU THAT'S<br>ALWAYS OPEN</h2>
+            <ul class="checklist" style="margin-top: 24px;">
+              <li><div><strong>Browse before they arrive.</strong> Full menu &amp; Herbalife catalog with prices, photos, calories.</div></li>
+              <li><div><strong>Live stock.</strong> "Only 2 left" badges so they don't show up disappointed.</div></li>
+              <li><div><strong>Order ahead.</strong> Pickup or delivery, pay online (GCash, card) or at the hub.</div></li>
+              <li><div><strong>Loved by our customers.</strong> Real Google reviews surfaced on the landing page.</div></li>
+            </ul>
+          </div>
+          <div>
+            <div class="screenshot">
+              <div class="browser-chrome">
+                <span class="dot" style="background:#ed6a5e;"></span>
+                <span class="dot" style="background:#f4be4f;"></span>
+                <span class="dot" style="background:#62c554;"></span>
+                <span class="url">sipnbite.local/shop</span>
+              </div>
+              <img src="pitch-deck-screenshots/06-shop.png" alt="Customer shop page with product cards, stock badges, and pricing" />
+            </div>
+            <p class="caption">/shop · customer storefront</p>
+          </div>
+        </div>
+        <div class="slide-num">06</div>
+      </section>
+
+      <!-- ============ 07 · POS WORKSPACE ============ -->
+      <section class="slide olive" id="s7">
+        <div class="brand-stamp dark-on-light">Operator side</div>
+        <div class="two-col">
+          <div>
+            <p class="eyebrow">made for walk-ins, fast</p>
+            <h2 class="display title-md">THE POS<br>WORKSPACE</h2>
+            <p class="body-md" style="margin-top: 16px;">
+              A kanban built around how walk-in service actually flows. Big buttons,
+              FIFO queue, one tap moves an order forward.
+            </p>
+            <ul class="checklist" style="margin-top: 18px;">
+              <li><div><strong>New</strong> — confirm payment, start prepping. Cash → live change.</div></li>
+              <li><div><strong>Preparing</strong> — your prep team is blending / plating.</div></li>
+              <li><div><strong>Ready · Handover</strong> — customer arrives, one tap completes.</div></li>
+              <li><div><strong>+ Walk-in</strong> — ring up customers who didn't order online.</div></li>
+            </ul>
+          </div>
+          <div>
+            <div class="screenshot">
+              <div class="browser-chrome">
+                <span class="dot" style="background:#ed6a5e;"></span>
+                <span class="dot" style="background:#f4be4f;"></span>
+                <span class="dot" style="background:#62c554;"></span>
+                <span class="url">sipnbite.local/pos</span>
+              </div>
+              <img src="pitch-deck-screenshots/07-pos-kanban.png" alt="POS kanban board with New, Preparing, Ready columns" />
+            </div>
+            <p class="caption">/pos · operator kanban</p>
+          </div>
+        </div>
+        <div class="slide-num">07</div>
+      </section>
+
+      <!-- ============ 08 · DASHBOARD ============ -->
+      <section class="slide beige" id="s8">
+        <div class="brand-stamp dark-on-light">Owner side</div>
+        <div class="two-col">
+          <div>
+            <p class="eyebrow">finally, the numbers</p>
+            <h2 class="display title-md">A DASHBOARD<br>THAT TELLS YOU<br>WHAT MOVES</h2>
+            <p class="body-md" style="margin-top: 20px;">
+              At a glance: today's revenue, top-selling shakes, fast-moving Herbalife products, and which days are busiest.
+            </p>
+            <div style="display:flex; gap: 8px; margin-top: 18px; flex-wrap: wrap;">
+              <span class="pill soft">Revenue</span>
+              <span class="pill mustard">Top sellers</span>
+              <span class="pill outline">Stock alerts</span>
+            </div>
+          </div>
+          <div>
+            <div class="screenshot">
+              <div class="browser-chrome">
+                <span class="dot" style="background:#ed6a5e;"></span>
+                <span class="dot" style="background:#f4be4f;"></span>
+                <span class="dot" style="background:#62c554;"></span>
+                <span class="url">sipnbite.local/admin</span>
+              </div>
+              <img src="pitch-deck-screenshots/08-admin-dashboard.png" alt="Admin sales dashboard with KPIs, revenue chart, and top sellers" />
+            </div>
+            <p class="caption">/admin · sales dashboard</p>
+          </div>
+        </div>
+        <div class="slide-num">08</div>
+      </section>
+
+      <!-- ============ 09 · STOCK & INVENTORY ============ -->
+      <section class="slide" id="s9">
+        <div class="brand-stamp">Real-time inventory</div>
+        <div class="two-col">
+          <div>
+            <p class="eyebrow">no more surprises at the counter</p>
+            <h2 class="display title-md">STOCK THAT<br>STAYS HONEST</h2>
+            <ul class="checklist" style="margin-top: 18px;">
+              <li><div><strong>Auto decrement.</strong> Every order — online or walk-in — subtracts from stock instantly.</div></li>
+              <li><div><strong>Low-stock alerts.</strong> "Only 3 left" badges fire automatically.</div></li>
+              <li><div><strong>Easy admin.</strong> Use + / −, or type the exact count from any phone.</div></li>
+            </ul>
+            <div style="margin-top: 18px; display: flex; gap: 8px; flex-wrap: wrap;">
+              <span class="pill" style="background: var(--good); font-size: 10px;">In stock</span>
+              <span class="pill mustard" style="font-size: 10px;">Only N left</span>
+              <span class="pill" style="background: #E7D5D0; color: var(--rust); font-size: 10px;">Sold out</span>
+              <span class="pill soft" style="font-size: 10px;">Preorder</span>
+            </div>
+          </div>
+          <div>
+            <div class="screenshot">
+              <div class="browser-chrome">
+                <span class="dot" style="background:#ed6a5e;"></span>
+                <span class="dot" style="background:#f4be4f;"></span>
+                <span class="dot" style="background:#62c554;"></span>
+                <span class="url">sipnbite.local/admin/products</span>
+              </div>
+              <img src="pitch-deck-screenshots/09-admin-products.png" alt="Admin products page with thumbnails, stock steppers, and edit actions" />
+            </div>
+            <p class="caption">/admin/products · inventory management</p>
+          </div>
+        </div>
+        <div class="slide-num">09</div>
+      </section>
+
+      <!-- ============ 10 · SOCIAL MEDIA ============ -->
+      <section class="slide mustard" id="s10">
+        <div class="brand-stamp dark-on-light">The social media problem</div>
+        <div class="two-col">
+          <div>
+            <p class="eyebrow">a plan, not just an app</p>
+            <h2 class="display title-md">SOCIAL,<br>SOLVED.</h2>
+            <p class="body-md" style="margin-top: 20px;">
+              The biggest blocker isn't an app — it's <strong>"who posts on Instagram today?"</strong> Here's how we make that effort almost disappear.
+            </p>
+          </div>
+          <ul class="checklist">
+            <li><div><strong>Reuse what you already photograph.</strong> Every shake the prep team makes is a post. We capture them once, schedule for the week.</div></li>
+            <li><div><strong>Auto-share new menu items.</strong> When admin adds an item to the menu, draft IG + FB posts get generated.</div></li>
+            <li><div><strong>Surface real reviews.</strong> Charlie, Rachel, Jenevi — their 5-star Google reviews become Instagram carousels.</div></li>
+            <li><div><strong>15 minutes / week, not daily.</strong> One scheduled session a week keeps the feed alive.</div></li>
+          </ul>
+        </div>
+        <div class="slide-num">10</div>
+      </section>
+
+      <!-- ============ 11 · ROADMAP ============ -->
+      <section class="slide" id="s11">
+        <div class="brand-stamp">Phased rollout</div>
+        <p class="eyebrow">launch in three steps, not three years</p>
+        <h2 class="display title-md">OUR ROADMAP</h2>
+
+        <div class="three-col" style="margin-top: 36px;">
+          <div class="tile" style="background: var(--peach-soft);">
+            <div class="tile-label">Phase 1 · Now</div>
+            <p class="wordmark" style="font-size: 1.25rem;">Launch the hub online</p>
+            <p class="tile-body" style="font-size: 0.9rem;">Customer site, online ordering, POS for walk-ins, admin dashboard.</p>
+          </div>
+          <div class="tile peach">
+            <div class="tile-label">Phase 2 · 30 days</div>
+            <p class="wordmark" style="font-size: 1.25rem;">Social on autopilot</p>
+            <p class="tile-body" style="font-size: 0.9rem;">Schedule posts from menu items + reviews. Weekly content batch.</p>
+          </div>
+          <div class="tile mustard">
+            <div class="tile-label">Phase 3 · 90 days</div>
+            <p class="wordmark" style="font-size: 1.25rem;">Loyalty &amp; coaching</p>
+            <p class="tile-body" style="font-size: 0.9rem;">Customer accounts, weigh-in tracking, repeat-customer rewards.</p>
+          </div>
+        </div>
+        <div class="slide-num">11</div>
+      </section>
+
+      <!-- ============ 12 · CLOSE ============ -->
+      <section class="slide dark" id="s12" style="background: linear-gradient(135deg, var(--forest) 0%, #2c5641 100%);">
+        <div class="brand-stamp" style="color: var(--mustard);">Let's begin</div>
+        <div style="position: absolute; right: -100px; bottom: -100px;" class="blob peach" data-w="320"></div>
+        <style>.blob[data-w="320"]{width:320px;height:320px;opacity:0.18}</style>
+
+        <p class="eyebrow" style="color: var(--peach);">indulge without guilt,</p>
+        <h2 class="display hero-title" style="color: var(--mustard);">LET THE<br>GREEN SHINE.</h2>
+        <p class="body-md" style="margin-top: 24px; max-width: 60ch; color: rgba(251,246,234,0.82); font-size: 1.1rem;">
+          You've built the hub. We'll build the rest. Together, Sip 'N Bite becomes
+          the wellness destination on every Palawan phone — without losing the
+          family-run warmth that makes it special.
+        </p>
+
+        <div style="margin-top: 36px; display: flex; gap: 12px; flex-wrap: wrap;">
+          <a href="mailto:rosalie_ropero@yahoo.com" style="text-decoration:none;" class="pill">Start the conversation ↗</a>
+          <span class="pill outline" style="border-color: var(--mustard); color: var(--mustard);">Sip 'N Bite Hub · Castro St., Puerto Princesa</span>
+        </div>
+
+        <p style="position: absolute; bottom: 24px; left: 32px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.5;">
+          Sip 'N Bite Nutrition · 2026
+        </p>
+        <div class="slide-num" style="color: var(--mustard); opacity: 0.6;">12</div>
+      </section>
+
+    </div>
+
+    <div class="slide-controls" aria-label="Slide navigation">
+      <button id="prevSlide" type="button" aria-label="Previous slide">← Prev</button>
+      <span class="slide-indicator" id="slideIndicator">1 / 12</span>
+      <button id="nextSlide" type="button" aria-label="Next slide">Next →</button>
+    </div>
+
+    <script>
+      // Keyboard nav: arrows / PageDown / Space jump between slides
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      let current = 0;
+
+      function scrollToSlide(i) {
+        current = Math.max(0, Math.min(slides.length - 1, i));
+        slides[current].scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowDown" || e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") {
+          e.preventDefault();
+          scrollToSlide(current + 1);
+        } else if (e.key === "ArrowUp" || e.key === "ArrowLeft" || e.key === "PageUp") {
+          e.preventDefault();
+          scrollToSlide(current - 1);
+        } else if (e.key === "Home") {
+          scrollToSlide(0);
+        } else if (e.key === "End") {
+          scrollToSlide(slides.length - 1);
+        }
+      });
+
+      // Update current based on scroll position so arrows work intuitively
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              current = slides.indexOf(entry.target);
+            }
+          });
+        },
+        { threshold: 0.5 },
+      );
+      const prevButton = document.getElementById("prevSlide");
+      const nextButton = document.getElementById("nextSlide");
+      const slideIndicator = document.getElementById("slideIndicator");
+
+      function updateSlideControls() {
+        slideIndicator.textContent = `${current + 1} / ${slides.length}`;
+        prevButton.disabled = current === 0;
+        nextButton.disabled = current === slides.length - 1;
+      }
+
+      function scrollToSlide(i) {
+        current = Math.max(0, Math.min(slides.length - 1, i));
+        slides[current].scrollIntoView({ behavior: "smooth", block: "start" });
+        updateSlideControls();
+      }
+
+      prevButton.addEventListener("click", () => scrollToSlide(current - 1));
+      nextButton.addEventListener("click", () => scrollToSlide(current + 1));
+
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowDown" || e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") {
+          e.preventDefault();
+          scrollToSlide(current + 1);
+        } else if (e.key === "ArrowUp" || e.key === "ArrowLeft" || e.key === "PageUp") {
+          e.preventDefault();
+          scrollToSlide(current - 1);
+        } else if (e.key === "Home") {
+          scrollToSlide(0);
+        } else if (e.key === "End") {
+          scrollToSlide(slides.length - 1);
+        }
+      });
+
+      // Update current based on scroll position so arrows work intuitively
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              current = slides.indexOf(entry.target);
+              updateSlideControls();
+            }
+          });
+        },
+        { threshold: 0.5 },
+      );
+      slides.forEach((s) => io.observe(s));
+      updateSlideControls();
+    </script>
+  </body>
+</html>

@@ -9,7 +9,14 @@ export const menuItemSchema = z.object({
   benefits: z.array(z.string().min(1)).default([]),
   price: z.number().positive(),
   isAvailable: z.boolean().default(true),
-  imageUrl: z.string().url().optional().nullable(),
+  imageUrl: z
+    .string()
+    .min(1)
+    .refine((s) => /^https?:\/\//i.test(s) || s.startsWith("/uploads/"), {
+      message: "Must be an absolute URL or a /uploads/... path",
+    })
+    .optional()
+    .nullable(),
 });
 export type MenuItemInput = z.infer<typeof menuItemSchema>;
 
@@ -21,7 +28,14 @@ export const productSchema = z.object({
   stock: z.number().int().nonnegative().default(0),
   isPreorder: z.boolean().default(false),
   fulfillment: z.enum([Fulfillment.Pickup, Fulfillment.Delivery, Fulfillment.Both]),
-  imageUrl: z.string().url().optional().nullable(),
+  imageUrl: z
+    .string()
+    .min(1)
+    .refine((s) => /^https?:\/\//i.test(s) || s.startsWith("/uploads/"), {
+      message: "Must be an absolute URL or a /uploads/... path",
+    })
+    .optional()
+    .nullable(),
 });
 export type ProductInput = z.infer<typeof productSchema>;
 
@@ -37,6 +51,7 @@ export const createOrderSchema = z.object({
   paymentMethod: z.enum([PaymentMethod.Online, PaymentMethod.AtHub]).default(PaymentMethod.Online),
   deliveryAddress: z.string().max(500).optional().nullable(),
   notes: z.string().max(500).optional().nullable(),
+  cashOnHand: z.number().nonnegative().optional().nullable(),
 });
 export type CreateOrderInput = z.infer<typeof createOrderSchema>;
 

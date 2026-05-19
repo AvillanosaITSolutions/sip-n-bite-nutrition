@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Fulfillment, PaymentMethod, createOrderSchema, type CreateOrderInput } from "@snb/shared";
 import { useApi } from "../hooks/useApi";
 import { useCart } from "../store/cart";
+import { absUrl } from "../lib/absUrl";
 
 const CREAM = "#FBF6EA";
 const FOREST = "#1E3D2F";
@@ -46,12 +47,16 @@ export function CartPage() {
       await loginWithRedirect();
       return;
     }
+    const cashNum = parseFloat(cashOnHand);
+    const cashValid =
+      values.paymentMethod === PaymentMethod.AtHub && !Number.isNaN(cashNum) && cashNum > 0;
     const payload: CreateOrderInput = {
       lines: lines.map((l) => ({ itemType: l.itemType, itemId: l.itemId, quantity: l.quantity })),
       fulfillment: values.fulfillment === Fulfillment.Both ? Fulfillment.Pickup : values.fulfillment,
       paymentMethod: values.paymentMethod,
       deliveryAddress: values.deliveryAddress ?? null,
       notes: values.notes ?? null,
+      cashOnHand: cashValid ? cashNum : null,
     };
     const parsed = createOrderSchema.safeParse(payload);
     if (!parsed.success) {
@@ -136,7 +141,7 @@ export function CartPage() {
                   style={{ backgroundColor: "#E9EAD8" }}
                 >
                   {l.imageUrl ? (
-                    <img src={l.imageUrl} alt={l.name} className="w-full h-full object-contain p-2" />
+                    <img src={absUrl(l.imageUrl) ?? ""} alt={l.name} className="w-full h-full object-contain p-2" />
                   ) : (
                     <span className="text-3xl">{l.itemType === "menu" ? "🥤" : "🌿"}</span>
                   )}
@@ -154,30 +159,63 @@ export function CartPage() {
                   </p>
                 </div>
 
-                <div
-                  className="inline-flex items-center gap-2 rounded-full px-1.5 py-1"
-                  style={{ backgroundColor: PEACH, color: FOREST }}
-                >
-                  <button
-                    type="button"
-                    aria-label="Decrease"
-                    onClick={() => (l.quantity > 1 ? setQty(l.itemId, l.quantity - 1) : remove(l.itemId))}
-                    className="w-7 h-7 rounded-full flex items-center justify-center font-bold"
-                    style={{ backgroundColor: "rgba(0,0,0,0.12)" }}
-                  >
-                    −
-                  </button>
-                  <span className="w-6 text-center font-extrabold tabular-nums text-sm">{l.quantity}</span>
-                  <button
-                    type="button"
-                    aria-label="Increase"
-                    onClick={() => setQty(l.itemId, l.quantity + 1)}
-                    className="w-7 h-7 rounded-full flex items-center justify-center font-bold"
-                    style={{ backgroundColor: FOREST, color: PEACH }}
-                  >
-                    +
-                  </button>
-                </div>
+                {(() => {
+                  const atMax = l.maxQuantity !== undefined && l.quantity >= l.maxQuantity;
+                  return (
+                    <div
+                      className="inline-flex items-center gap-2 rounded-full px-1.5 py-1"
+                      style={{ backgroundColor: PEACH, color: FOREST }}
+                    >
+                      <button
+                        type="button"
+                        aria-label="Decrease"
+                        onClick={() => (l.quantity > 1 ? setQty(l.itemId, l.quantity - 1) : remove(l.itemId))}
+                        className="w-7 h-7 rounded-full flex items-center justify-center font-bold"
+                        style={{ backgroundColor: "rgba(0,0,0,0.12)" }}
+                      >
+                        −
+                      </button>
+                      <input
+                        type="number"
+                        inputMode="numeric"
+                        min={1}
+                        max={l.maxQuantity}
+                        value={l.quantity}
+                        aria-label="Quantity"
+                        onChange={(e) => {
+                          const n = parseInt(e.target.value, 10);
+                          if (Number.isNaN(n)) return;
+                          const clamped =
+                            l.maxQuantity !== undefined
+                              ? Math.min(Math.max(1, n), l.maxQuantity)
+                              : Math.max(1, n);
+                          setQty(l.itemId, clamped);
+                        }}
+                        onFocus={(e) => e.currentTarget.select()}
+                        className="w-10 bg-transparent border-0 outline-none text-center font-extrabold tabular-nums text-sm p-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        style={{ color: FOREST, boxShadow: "none" }}
+                      />
+                      <button
+                        type="button"
+                        aria-label={atMax ? "Stock limit reached" : "Increase"}
+                        onClick={() => {
+                          if (atMax) return;
+                          setQty(l.itemId, l.quantity + 1);
+                        }}
+                        disabled={atMax}
+                        title={atMax ? `Only ${l.maxQuantity} in stock` : undefined}
+                        className="w-7 h-7 rounded-full flex items-center justify-center font-bold disabled:cursor-not-allowed"
+                        style={{
+                          backgroundColor: FOREST,
+                          color: PEACH,
+                          opacity: atMax ? 0.35 : 1,
+                        }}
+                      >
+                        +
+                      </button>
+                    </div>
+                  );
+                })()}
 
                 <div className="text-right shrink-0 w-24">
                   <p className="font-black" style={{ color: FOREST }}>

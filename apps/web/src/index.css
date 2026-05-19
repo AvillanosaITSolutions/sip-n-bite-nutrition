@@ -20,4 +20,46 @@
     letter-spacing: -0.02em;
     font-variation-settings: "opsz" 144, "SOFT" 50;
   }
+
+  /* Visible focus ring for keyboard users only (not mouse clicks). */
+  :focus-visible {
+    outline: 2px solid #1e3d2f;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  /* Higher-contrast variant for elements that already use forest as bg. */
+  [data-on-forest]:focus-visible {
+    outline-color: #f4a77e;
+  }
+
+  /* Skip link: hidden until focused. */
+  .skip-link {
+    position: absolute;
+    top: -100px;
+    left: 1rem;
+    z-index: 200;
+    padding: 0.5rem 1rem;
+    background: #1e3d2f;
+    color: #fbf6ea;
+    border-radius: 9999px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 0.75rem;
+    transition: top 200ms ease;
+  }
+  .skip-link:focus {
+    top: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

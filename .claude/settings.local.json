@@ -14,7 +14,10 @@
       "Read(//c/Users/kmavillanosa/**)",
       "Bash(pwsh -NoProfile -Command 'Get-ChildItem -Path . -Recurse -Force -File -Filter '\\\\''.env*'\\\\'' -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notlike '\\\\''*node_modules*'\\\\'' -and $_.FullName -notlike '\\\\''*\\\\.git\\\\*'\\\\'' } | Select-Object FullName, Length, LastWriteTime')",
       "Bash(pwsh -NoProfile -Command 'Get-ChildItem -Path '\\\\''apps\\\\web'\\\\'' -Force | Where-Object { $_.Name -like '\\\\''*env*'\\\\'' } | Select-Object Name, Length, LastWriteTime, Attributes')",
-      "Bash(pnpm build:shared)"
+      "Bash(pnpm build:shared)",
+      "Bash(echo \"exit=$?\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(\"/c/Program Files/Google/Chrome/Application/chrome.exe\" --headless --disable-gpu --hide-scrollbars --no-sandbox --window-size=1366,900 --screenshot=\"$\\(pwd\\)/pitch-deck-screenshots/05-landing.png\" http://localhost:5173/)"
     ]
   }
 }

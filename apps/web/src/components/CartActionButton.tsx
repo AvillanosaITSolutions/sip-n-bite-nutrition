@@ -47,7 +47,7 @@ export function CartActionButton({
   const pushToast = useToast((s) => s.push);
 
   function handleAdd() {
-    add({ itemType, itemId, name, unitPrice, quantity: 1, imageUrl });
+    add({ itemType, itemId, name, unitPrice, quantity: 1, imageUrl, maxQuantity });
     playAddToCart();
     const isPreorder = /preorder/i.test(label);
     pushToast({
@@ -68,9 +68,11 @@ export function CartActionButton({
           if (atMax) return;
           setQty(itemId, quantity + 1);
         }}
+        onSet={(n) => setQty(itemId, n)}
         variant={variant}
         fullWidth={fullWidth}
         atMax={atMax}
+        max={maxQuantity}
       />
     );
   }
@@ -93,16 +95,20 @@ function QuantityControls({
   quantity,
   onDec,
   onInc,
+  onSet,
   variant,
   fullWidth,
   atMax,
+  max,
 }: {
   quantity: number;
   onDec: () => void;
   onInc: () => void;
+  onSet: (n: number) => void;
   variant: Variant;
   fullWidth?: boolean;
   atMax?: boolean;
+  max?: number;
 }) {
   const isCompact = variant === "compact";
   const btnSize = isCompact ? "w-6 h-6 text-sm" : "w-8 h-8 text-base";
@@ -128,9 +134,30 @@ function QuantityControls({
       >
         −
       </button>
-      <span className={"font-extrabold tabular-nums " + (isCompact ? "text-xs" : "text-sm")}>
-        {quantity} <span className="uppercase tracking-widest opacity-70 text-[9px] ml-0.5">in cart</span>
-      </span>
+      <label className="inline-flex items-baseline gap-1">
+        <input
+          type="number"
+          inputMode="numeric"
+          min={1}
+          max={max}
+          value={quantity}
+          aria-label="Quantity"
+          onChange={(e) => {
+            const n = parseInt(e.target.value, 10);
+            if (Number.isNaN(n)) return;
+            const clamped = max !== undefined ? Math.min(Math.max(1, n), max) : Math.max(1, n);
+            onSet(clamped);
+          }}
+          onFocus={(e) => e.currentTarget.select()}
+          className={
+            "bg-transparent border-0 outline-none text-center font-extrabold tabular-nums p-0 " +
+            (isCompact ? "text-xs w-6" : "text-sm w-7") +
+            " [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          }
+          style={{ color: FOREST, boxShadow: "none" }}
+        />
+        <span className="uppercase tracking-widest opacity-70 text-[9px]">in cart</span>
+      </label>
       <button
         type="button"
         onClick={onInc}

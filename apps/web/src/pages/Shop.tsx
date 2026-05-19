@@ -3,6 +3,7 @@ import { Fulfillment, OrderItemType } from "@snb/shared";
 import { useApi } from "../hooks/useApi";
 import { CartActionButton } from "../components/CartActionButton";
 import { Highlight } from "../components/Highlight";
+import { absUrl } from "../lib/absUrl";
 
 const CREAM = "#FBF6EA";
 const FOREST = "#1E3D2F";
@@ -21,25 +22,52 @@ type Product = {
   imageUrl: string | null;
 };
 
+type Availability = "all" | "available" | "preorder" | "unavailable";
+
+const FILTERS: { v: Availability; label: string }[] = [
+  { v: "all", label: "All" },
+  { v: "available", label: "Available" },
+  { v: "preorder", label: "Preorder" },
+  { v: "unavailable", label: "Sold out" },
+];
+
 export function ShopPage() {
   const api = useApi();
   const [items, setItems] = useState<Product[]>([]);
   const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState<Availability>("all");
 
   useEffect(() => {
     api.get<Product[]>("/products").then(setItems).catch(() => setItems([]));
   }, [api]);
 
   const visible = useMemo(() => {
+    const byAvailability = items.filter((p) => {
+      if (filter === "all") return true;
+      if (filter === "preorder") return p.isPreorder;
+      if (filter === "available") return !p.isPreorder && p.stock > 0;
+      if (filter === "unavailable") return !p.isPreorder && p.stock <= 0;
+      return true;
+    });
     const q = query.trim().toLowerCase();
-    if (!q) return items;
-    return items.filter(
+    if (!q) return byAvailability;
+    return byAvailability.filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
         p.description.toLowerCase().includes(q) ||
         p.sku.toLowerCase().includes(q),
     );
-  }, [items, query]);
+  }, [items, query, filter]);
+
+  const counts = useMemo(
+    () => ({
+      all: items.length,
+      available: items.filter((p) => !p.isPreorder && p.stock > 0).length,
+      preorder: items.filter((p) => p.isPreorder).length,
+      unavailable: items.filter((p) => !p.isPreorder && p.stock <= 0).length,
+    }),
+    [items],
+  );
 
   return (
     <section className="py-8">
@@ -64,6 +92,7 @@ export function ShopPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search products, SKUs…"
+              aria-label="Search products"
               className="flex-1 bg-transparent outline-none text-sm placeholder:text-stone-400"
               style={{ color: FOREST }}
             />
@@ -83,6 +112,40 @@ export function ShopPage() {
         </div>
       </div>
 
+      <div
+        role="group"
+        aria-label="Filter products by availability"
+        className="mb-6 inline-flex p-1 rounded-full flex-wrap"
+        style={{ backgroundColor: CREAM, border: `1px solid ${PEACH_SOFT}` }}
+      >
+        {FILTERS.map((f) => {
+          const active = filter === f.v;
+          return (
+            <button
+              key={f.v}
+              onClick={() => setFilter(f.v)}
+              aria-pressed={active}
+              className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest transition inline-flex items-center gap-1.5"
+              style={{
+                backgroundColor: active ? PEACH : "transparent",
+                color: FOREST,
+              }}
+            >
+              <span>{f.label}</span>
+              <span
+                className="inline-flex items-center justify-center min-w-[20px] h-[20px] px-1.5 rounded-full text-[10px] font-black"
+                style={{
+                  backgroundColor: active ? "rgba(0,0,0,0.12)" : PEACH_SOFT,
+                  color: FOREST,
+                }}
+              >
+                {counts[f.v]}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {visible.map((p) => {
           const inStock = p.stock > 0;
@@ -97,10 +160,11 @@ export function ShopPage() {
           const statusBg = p.isPreorder
             ? PEACH_SOFT
             : !inStock
-              ? "#F1ECDC"
+              ? "#E7D5D0" // muted clay — distinct "sold out" tone
               : isLowStock
                 ? "#FBD9B8"
                 : "#DCE7DA";
+          const statusColor = !p.isPreorder && !inStock ? "#7A4438" : FOREST;
 
           return (
             <article
@@ -115,7 +179,7 @@ export function ShopPage() {
               >
                 {p.imageUrl ? (
                   <img
-                    src={p.imageUrl}
+                    src={absUrl(p.imageUrl) ?? ""}
                     alt={p.name}
                     loading="lazy"
                     className="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-105"
@@ -129,7 +193,7 @@ export function ShopPage() {
                 {/* Status pill */}
                 <span
                   className="absolute top-3 left-3 text-[10px] uppercase tracking-widest font-bold px-2.5 py-1 rounded-full"
-                  style={{ backgroundColor: statusBg, color: FOREST }}
+                  style={{ backgroundColor: statusBg, color: statusColor }}
                 >
                   {statusLabel}
                 </span>
@@ -184,8 +248,10 @@ export function ShopPage() {
         <div className="py-16 text-center text-stone-500">
           {items.length === 0 ? (
             <>No products yet. Run <code>pnpm --filter @snb/api seed:herbalife</code> to populate.</>
-          ) : (
+          ) : query ? (
             <>No matches for "{query}".</>
+          ) : (
+            <>No products in this category yet.</>
           )}
         </div>
       )}

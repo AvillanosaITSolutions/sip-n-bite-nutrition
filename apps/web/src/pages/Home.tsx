@@ -6,6 +6,7 @@ import { useCart } from "../store/cart";
 import { CartActionButton } from "../components/CartActionButton";
 import { StoreMap, DirectionsLink } from "../components/StoreMap";
 import { Reveal } from "../components/Reveal";
+import { absUrl } from "../lib/absUrl";
 
 const STORE_LAT = 9.761516860381166;
 const STORE_LNG = 118.74527723616771;
@@ -357,7 +358,7 @@ export function Home() {
                 >
                   {item.imageUrl ? (
                     <img
-                      src={item.imageUrl}
+                      src={absUrl(item.imageUrl) ?? ""}
                       alt={item.name}
                       loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -443,7 +444,7 @@ export function Home() {
                   >
                     {p.imageUrl ? (
                       <img
-                        src={p.imageUrl}
+                        src={absUrl(p.imageUrl) ?? ""}
                         alt={p.name}
                         loading="lazy"
                         className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
@@ -471,14 +472,15 @@ export function Home() {
                         const bg = p.isPreorder
                           ? PEACH_SOFT
                           : !inStock
-                            ? "#F1ECDC"
+                            ? "#E7D5D0"
                             : isLow
                               ? "#FBD9B8"
                               : "#DCE7DA";
+                        const color = !p.isPreorder && !inStock ? "#7A4438" : FOREST;
                         return (
                           <span
                             className="text-[10px] uppercase tracking-widest font-bold px-2 py-0.5 rounded-full"
-                            style={{ backgroundColor: bg, color: FOREST }}
+                            style={{ backgroundColor: bg, color }}
                           >
                             {label}
                           </span>
@@ -629,7 +631,7 @@ export function Home() {
                 />
                 {heroProduct?.imageUrl ? (
                   <img
-                    src={heroProduct.imageUrl}
+                    src={absUrl(heroProduct.imageUrl) ?? ""}
                     alt={heroProduct.name}
                     className="relative w-full h-full object-contain p-8 transition-transform duration-500 hover:-translate-y-1"
                     style={{

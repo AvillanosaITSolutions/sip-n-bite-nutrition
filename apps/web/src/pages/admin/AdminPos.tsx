@@ -27,6 +27,7 @@ type Order = {
   items: Item[];
   createdAt: string;
   paidAt: string | null;
+  cashReceived: string | null;
 };
 
 type Column = {
@@ -123,6 +124,17 @@ export function AdminPos() {
       const list = await api.get<Order[]>("/orders");
       setOrders(list);
       setError(null);
+      // Seed the cash-received input from the order's recorded cashOnHand,
+      // but don't overwrite anything the operator has already typed.
+      setOpenCash((prev) => {
+        const next = { ...prev };
+        for (const o of list) {
+          if (o.cashReceived && !(o.id in next)) {
+            next[o.id] = Number(o.cashReceived).toString();
+          }
+        }
+        return next;
+      });
     } catch (e: any) {
       setError(e?.message ?? "Failed to load orders");
     }
@@ -201,7 +213,7 @@ export function AdminPos() {
   return (
     <div className="space-y-6" style={{ color: FOREST }}>
       {/* Stats strip */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
         <StatTile
           label="Active"
           value={
@@ -322,9 +334,14 @@ function StatTile({
   fg: string;
 }) {
   return (
-    <div className="rounded-2xl p-4 shadow-sm" style={{ backgroundColor: bg, color: fg }}>
-      <p className="text-[10px] uppercase tracking-widest font-bold opacity-80">{label}</p>
-      <p className="text-2xl md:text-3xl font-black leading-none mt-1">{value}</p>
+    <div
+      className="rounded-2xl p-3 md:p-4 shadow-sm overflow-hidden"
+      style={{ backgroundColor: bg, color: fg }}
+    >
+      <p className="text-[9px] md:text-[10px] uppercase tracking-widest font-bold opacity-80 truncate">
+        {label}
+      </p>
+      <p className="text-lg md:text-3xl font-black leading-none mt-1 truncate">{value}</p>
     </div>
   );
 }
@@ -370,9 +387,17 @@ function Card({
       {/* Header */}
       <div className="px-3 py-2 flex items-center justify-between" style={{ backgroundColor: CREAM }}>
         <div className="min-w-0">
-          <p className="font-display text-sm leading-none truncate">
-            #{order.id.slice(0, 8).toUpperCase()}
-          </p>
+          <a
+            href={`/orders/${order.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-display text-sm leading-none truncate inline-flex items-center gap-1 hover:underline"
+            style={{ color: FOREST }}
+            title="Open full order details in a new tab"
+          >
+            <span>#{order.id.slice(0, 8).toUpperCase()}</span>
+            <span className="text-[10px] opacity-60">↗</span>
+          </a>
           <p className="text-[10px] text-stone-500 mt-0.5">{timeAgo(order.createdAt)}</p>
         </div>
         <span

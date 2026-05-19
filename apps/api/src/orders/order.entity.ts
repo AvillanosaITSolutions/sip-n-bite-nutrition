@@ -53,6 +53,10 @@ export class Order {
   @Column({ type: "timestamptz", nullable: true })
   paidAt: Date | null;
 
+  /** Cash the customer declared they'd bring (or what the operator rang up). */
+  @Column({ type: "numeric", precision: 12, scale: 2, nullable: true })
+  cashReceived: string | null;
+
   @OneToMany(() => OrderItem, (i) => i.order, { cascade: true, eager: true })
   items: OrderItem[];
 
