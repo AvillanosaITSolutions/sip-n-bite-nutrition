@@ -1,0 +1,19 @@
+{
+  "name": "sip-n-bite-nutrition",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "build:shared": "pnpm --filter @snb/shared build",
+    "dev:shared": "pnpm --filter @snb/shared dev",
+    "dev:api": "pnpm build:shared && pnpm --filter @snb/api start:dev",
+    "dev:web": "pnpm build:shared && pnpm --filter @snb/web dev",
+    "build": "pnpm build:shared && pnpm -r --filter=!@snb/shared build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@9.12.0"
+}

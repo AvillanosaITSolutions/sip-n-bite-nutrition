@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: snb-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: snb
+    ports:
+      - "5432:5432"
+    volumes:
+      - snb-pgdata:/var/lib/postgresql/data
+
+volumes:
+  snb-pgdata:

@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv \"imgi_4_pc-0129-ph.png\" \"f1-wildberry-550g.png\")",
+      "Bash(mv \"imgi_6_pc-1202-ph.png\" \"f1-dutchchoc-sachets.png\")",
+      "Bash(mv \"imgi_8_pc-0127-ph.png\" \"f1-frenchvanilla-550g.png\")",
+      "Bash(mv \"imgi_10_pc-0759-ph.png\" \"htc-applechamomile-102g.png\")",
+      "Bash(mv \"imgi_12_pc-2631-sg.png\" \"hac-mandarin-473ml.png\")",
+      "Bash(netstat -ano)",
+      "Bash(pwsh -NoProfile -Command 'Get-ChildItem env: | Where-Object { $_.Name -like '\\\\''*AUTH0*'\\\\'' -or $_.Name -like '\\\\''*VITE*'\\\\'' }')",
+      "Bash(xxd apps/web/.env)",
+      "Bash(xxd .env)",
+      "Bash(pwsh -NoProfile -Command \"Get-Process -Id 34272 | Select-Object Path, StartTime; \\(Get-CimInstance Win32_Process -Filter 'ProcessId = 34272'\\).CommandLine; \\(Get-CimInstance Win32_Process -Filter 'ProcessId = 34272'\\).ExecutablePath\")",
+      "Read(//c/Users/kmavillanosa/**)",
+      "Bash(pwsh -NoProfile -Command 'Get-ChildItem -Path . -Recurse -Force -File -Filter '\\\\''.env*'\\\\'' -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notlike '\\\\''*node_modules*'\\\\'' -and $_.FullName -notlike '\\\\''*\\\\.git\\\\*'\\\\'' } | Select-Object FullName, Length, LastWriteTime')",
+      "Bash(pwsh -NoProfile -Command 'Get-ChildItem -Path '\\\\''apps\\\\web'\\\\'' -Force | Where-Object { $_.Name -like '\\\\''*env*'\\\\'' } | Select-Object Name, Length, LastWriteTime, Attributes')",
+      "Bash(pnpm build:shared)"
+    ]
+  }
+}
