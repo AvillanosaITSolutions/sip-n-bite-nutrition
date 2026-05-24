@@ -62,7 +62,7 @@ jobs:
           file: apps/web/Dockerfile
           push: true
           build-args: |
-            VITE_API_URL=http://88.222.245.88:3000
+            VITE_API_URL=http://88.222.245.88:3001
             VITE_AUTH0_DOMAIN=${{ secrets.AUTH0_DOMAIN }}
             VITE_AUTH0_CLIENT_ID=${{ secrets.AUTH0_CLIENT_ID }}
             VITE_AUTH0_AUDIENCE=${{ secrets.AUTH0_AUDIENCE }}
@@ -90,16 +90,38 @@ jobs:
 
       - name: Deploy on VPS
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          IMAGE_TAG: ${{ needs.build.outputs.tag }}
+          GHCR_REPO: ${{ secrets.GHCR_REPO }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          AUTH0_DOMAIN: ${{ secrets.AUTH0_DOMAIN }}
+          AUTH0_AUDIENCE: ${{ secrets.AUTH0_AUDIENCE }}
+          PHILSMS_API_TOKEN: ${{ secrets.PHILSMS_API_TOKEN }}
+          PHILSMS_SENDER_ID: ${{ secrets.PHILSMS_SENDER_ID }}
         with:
           host: 88.222.245.88
           username: root
           key: ${{ secrets.VPS_SSH_KEY_1 }}
-          envs: IMAGE_TAG
+          envs: IMAGE_TAG,GHCR_REPO,POSTGRES_USER,POSTGRES_PASSWORD,POSTGRES_DB,AUTH0_DOMAIN,AUTH0_AUDIENCE,PHILSMS_API_TOKEN,PHILSMS_SENDER_ID
           script: |
             set -euo pipefail
+            mkdir -p ~/snb
             cd ~/snb
-            # Pull image-tag override into existing .env so compose can interpolate it
-            grep -q '^IMAGE_TAG=' .env && sed -i "s/^IMAGE_TAG=.*/IMAGE_TAG=${{ needs.build.outputs.tag }}/" .env || echo "IMAGE_TAG=${{ needs.build.outputs.tag }}" >> .env
+            # Generate .env from GitHub secrets each deploy
+            cat > .env <<EOF
+            IMAGE_TAG=${IMAGE_TAG}
+            GHCR_REPO=${GHCR_REPO}
+            POSTGRES_USER=${POSTGRES_USER}
+            POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            POSTGRES_DB=${POSTGRES_DB}
+            AUTH0_DOMAIN=${AUTH0_DOMAIN}
+            AUTH0_AUDIENCE=${AUTH0_AUDIENCE}
+            PHILSMS_API_TOKEN=${PHILSMS_API_TOKEN}
+            PHILSMS_SENDER_ID=${PHILSMS_SENDER_ID}
+            EOF
+            chmod 600 .env
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
