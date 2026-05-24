@@ -1,0 +1,106 @@
+# Production stack — Traefik + Postgres + API + Web on the VPS.
+# Required env vars (provided by .env on the host, see .env.production.example):
+#   DOMAIN_API     — e.g. api.sipnbite.example
+#   DOMAIN_WEB     — e.g. sipnbite.example
+#   ACME_EMAIL     — admin email for Let's Encrypt
+#   POSTGRES_*     — db credentials
+#   AUTH0_*        — backend Auth0 config
+#   IMAGE_TAG      — image tag to deploy (set by CI to the git SHA)
+#   GHCR_REPO      — e.g. ghcr.io/owner/repo
+
+name: snb-prod
+
+services:
+  # ============== Traefik reverse proxy + TLS ==============
+  traefik:
+    image: traefik:v3.1
+    container_name: snb-traefik
+    restart: unless-stopped
+    command:
+      - "--api.dashboard=false"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--log.level=INFO"
+      - "--accesslog=true"
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - edge
+
+  # ============== Postgres ==============
+  postgres:
+    image: postgres:16-alpine
+    container_name: snb-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - snb-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+  # ============== API (NestJS) ==============
+  api:
+    image: ${GHCR_REPO}/api:${IMAGE_TAG:-latest}
+    container_name: snb-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      WEB_ORIGIN: http://88.222.245.88
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      AUTH0_DOMAIN: ${AUTH0_DOMAIN}
+      AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
+      PAYMONGO_SECRET_KEY: ${PAYMONGO_SECRET_KEY:-}
+      PAYMONGO_WEBHOOK_SECRET: ${PAYMONGO_WEBHOOK_SECRET:-}
+      PHILSMS_API_TOKEN: ${PHILSMS_API_TOKEN:-}
+      PHILSMS_SENDER_ID: ${PHILSMS_SENDER_ID:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      MAIL_FROM: ${MAIL_FROM:-}
+    ports:
+      - "3000:3000"
+    volumes:
+      - snb-uploads:/app/uploads
+    networks:
+      - edge
+      - internal
+
+  # ============== Web (Nginx + Vite build) ==============
+  web:
+    image: ${GHCR_REPO}/web:${IMAGE_TAG:-latest}
+    container_name: snb-web
+    restart: unless-stopped
+    networks:
+      - edge
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=snb-prod_edge"
+      - "traefik.http.routers.snb-web.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.snb-web.entrypoints=web"
+      - "traefik.http.services.snb-web.loadbalancer.server.port=80"
+
+networks:
+  edge:
+    driver: bridge
+  internal:
+    driver: bridge
+
+volumes:
+  snb-pgdata:
+  snb-uploads:

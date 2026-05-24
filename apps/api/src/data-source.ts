@@ -8,12 +8,19 @@ import { Product } from "./products/product.entity";
 import { Order } from "./orders/order.entity";
 import { OrderItem } from "./orders/order-item.entity";
 
+const isProd = process.env.NODE_ENV === "production";
+
 export const dataSourceOptions: DataSourceOptions = {
   type: "postgres",
   url: process.env.DATABASE_URL,
   entities: [User, MenuItem, Product, Order, OrderItem],
-  migrations: ["dist/migrations/*.js"],
-  synchronize: process.env.NODE_ENV !== "production",
+  // In production, run from compiled JS in dist/. Locally we run from TS sources.
+  migrations: isProd
+    ? [__dirname + "/migrations/*.js"]
+    : [__dirname + "/migrations/*.ts"],
+  // Dev keeps synchronize for ergonomics; prod relies strictly on migrations.
+  synchronize: !isProd,
+  migrationsRun: isProd,
   logging: process.env.NODE_ENV === "development",
 };
 

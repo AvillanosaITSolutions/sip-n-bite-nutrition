@@ -1,0 +1,17 @@
+**/node_modules
+**/dist
+**/.turbo
+**/.cache
+**/coverage
+**/.env
+**/.env.*
+!**/.env.example
+.git
+.github
+.claude
+.idea
+.vscode
+pitch-deck*.html
+pitch-deck-screenshots
+README.md
+*.log
