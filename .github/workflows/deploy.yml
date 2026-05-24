@@ -82,8 +82,8 @@ jobs:
       - name: Copy compose file to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
+          host: 88.222.245.88
+          username: root
           key: ${{ secrets.VPS_SSH_KEY_1 }}
           source: "docker-compose.prod.yml"
           target: "~/snb/"
@@ -91,8 +91,8 @@ jobs:
       - name: Deploy on VPS
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
+          host: 88.222.245.88
+          username: root
           key: ${{ secrets.VPS_SSH_KEY_1 }}
           envs: IMAGE_TAG
           script: |
