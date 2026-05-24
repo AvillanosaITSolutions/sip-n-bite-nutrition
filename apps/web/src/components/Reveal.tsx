@@ -38,7 +38,7 @@ export function Reveal({ children, delay = 0, className = "", style, as = "div" 
     return () => io.disconnect();
   }, []);
 
-  const Tag = as as keyof JSX.IntrinsicElements;
+  const Tag: React.ElementType = as;
   return (
     <Tag
       ref={ref as never}

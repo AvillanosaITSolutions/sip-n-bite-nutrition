@@ -199,14 +199,14 @@ export function AdminPos() {
 
   const queueValue = orders
     .filter((o) =>
-      [
+      ([
         OrderStatus.Pending,
         OrderStatus.AwaitingPayment,
         OrderStatus.Paid,
         OrderStatus.Preparing,
         OrderStatus.ReadyForPickup,
         OrderStatus.OutForDelivery,
-      ].includes(o.status),
+      ] as OrderStatus[]).includes(o.status),
     )
     .reduce((s, o) => s + Number(o.total), 0);
 
