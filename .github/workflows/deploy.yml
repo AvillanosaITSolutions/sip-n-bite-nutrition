@@ -79,13 +79,13 @@ jobs:
       - name: Checkout (for compose file)
         uses: actions/checkout@v4
 
-      - name: Copy compose file to VPS
+      - name: Copy compose file + seed uploads to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
           host: 88.222.245.88
           username: root
           key: ${{ secrets.VPS_SSH_KEY_1 }}
-          source: "docker-compose.prod.yml"
+          source: "docker-compose.prod.yml,apps/api/uploads/**"
           target: "~/snb/"
 
       - name: Deploy on VPS
@@ -125,4 +125,9 @@ jobs:
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            # Seed the uploads volume with the static images shipped in the repo.
+            # New filenames (admin uploads) in the volume are left untouched.
+            if [ -d ~/snb/apps/api/uploads ]; then
+              docker cp ~/snb/apps/api/uploads/. snb-api:/app/uploads/
+            fi
             docker image prune -f

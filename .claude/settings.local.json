@@ -24,7 +24,9 @@
       "Bash(pnpm --filter @snb/api deploy --prod /tmp/snb-deploy-test)",
       "Read(//tmp/snb-deploy-test/node_modules/**)",
       "Read(//tmp/snb-deploy-test/node_modules/@snb/shared/**)",
-      "Read(//tmp/snb-deploy-test/dist/**)"
+      "Read(//tmp/snb-deploy-test/dist/**)",
+      "Bash(ls public *)",
+      "Bash(ls src/assets)"
     ]
   }
 }
