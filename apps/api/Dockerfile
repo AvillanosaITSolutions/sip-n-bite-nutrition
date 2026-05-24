@@ -16,6 +16,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
 
 # ------------- Build (shared + api) -------------
 FROM deps AS build
+COPY tsconfig.base.json ./
 COPY packages/shared packages/shared
 COPY apps/api apps/api
 RUN pnpm --filter @snb/shared build && pnpm --filter @snb/api build

@@ -24,6 +24,7 @@ ENV VITE_API_URL=${VITE_API_URL} \
     VITE_AUTH0_DOMAIN=${VITE_AUTH0_DOMAIN} \
     VITE_AUTH0_CLIENT_ID=${VITE_AUTH0_CLIENT_ID} \
     VITE_AUTH0_AUDIENCE=${VITE_AUTH0_AUDIENCE}
+COPY tsconfig.base.json ./
 COPY packages/shared packages/shared
 COPY apps/web apps/web
 RUN pnpm --filter @snb/shared build && pnpm --filter @snb/web build
