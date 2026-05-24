@@ -1,14 +1,13 @@
 # Production stack — API + Web on the VPS.
-# Reuses the existing Postgres (visa-reminder-postgres) on the external
-# network visa-reminder_default. No own postgres/traefik to avoid port clashes.
+# Routes through the EXISTING visa-reminder-traefik (certresolver "letsencrypt")
+# and reuses the existing Postgres, all on the external visa-reminder_default network.
+# HTTPS via sslip.io hostnames (free, no domain needed):
+#   web → https://88.222.245.88.sslip.io
+#   api → https://api.88.222.245.88.sslip.io
 #
-# Required env vars (provided by ~/snb/.env, written by CI from GitHub secrets):
-#   GHCR_REPO       — e.g. ghcr.io/owner/repo
-#   IMAGE_TAG       — image tag to deploy (set by CI to the git SHA)
-#   POSTGRES_USER   — existing postgres user (postgres)
-#   POSTGRES_PASSWORD
-#   POSTGRES_DB     — the NEW database created for this app
-#   AUTH0_DOMAIN / AUTH0_AUDIENCE
+# Required env vars (~/snb/.env, written by CI from GitHub secrets):
+#   GHCR_REPO, IMAGE_TAG, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB,
+#   AUTH0_DOMAIN, AUTH0_AUDIENCE
 
 name: snb-prod
 
@@ -21,7 +20,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
-      WEB_ORIGIN: http://88.222.245.88:8090
+      WEB_ORIGIN: https://88.222.245.88.sslip.io
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@visa-reminder-postgres:5432/${POSTGRES_DB}
       AUTH0_DOMAIN: ${AUTH0_DOMAIN}
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}
@@ -34,22 +33,34 @@ services:
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASS: ${SMTP_PASS:-}
       MAIL_FROM: ${MAIL_FROM:-}
-    ports:
-      - "3001:3000"
     volumes:
       - snb-uploads:/app/uploads
     networks:
       - visa-reminder_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=visa-reminder_default"
+      - "traefik.http.routers.snb-api.rule=Host(`api.88.222.245.88.sslip.io`)"
+      - "traefik.http.routers.snb-api.entrypoints=websecure"
+      - "traefik.http.routers.snb-api.tls=true"
+      - "traefik.http.routers.snb-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.snb-api.loadbalancer.server.port=3000"
 
   # ============== Web (Nginx + Vite build) ==============
   web:
     image: ${GHCR_REPO}/web:${IMAGE_TAG:-latest}
     container_name: snb-web
     restart: unless-stopped
-    ports:
-      - "8090:80"
     networks:
       - visa-reminder_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=visa-reminder_default"
+      - "traefik.http.routers.snb-web.rule=Host(`88.222.245.88.sslip.io`)"
+      - "traefik.http.routers.snb-web.entrypoints=websecure"
+      - "traefik.http.routers.snb-web.tls=true"
+      - "traefik.http.routers.snb-web.tls.certresolver=letsencrypt"
+      - "traefik.http.services.snb-web.loadbalancer.server.port=80"
 
 networks:
   visa-reminder_default:
