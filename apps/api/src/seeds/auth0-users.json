@@ -1,0 +1,38 @@
+[
+  {
+    "email": "superadmin@sipnbite.local",
+    "password": "Superadmin1",
+    "connection": "Username-Password-Authentication",
+    "email_verified": true,
+    "name": "Test SuperAdmin",
+    "app_metadata": { "role": "super-admin" },
+    "user_metadata": {}
+  },
+  {
+    "email": "admin@sipnbite.local",
+    "password": "Admin1234",
+    "connection": "Username-Password-Authentication",
+    "email_verified": true,
+    "name": "Test Admin",
+    "app_metadata": { "role": "admin" },
+    "user_metadata": {}
+  },
+  {
+    "email": "pos@sipnbite.local",
+    "password": "Posuser1",
+    "connection": "Username-Password-Authentication",
+    "email_verified": true,
+    "name": "Test POS Operator",
+    "app_metadata": { "role": "pos-operator" },
+    "user_metadata": {}
+  },
+  {
+    "email": "customer@sipnbite.local",
+    "password": "Customer1",
+    "connection": "Username-Password-Authentication",
+    "email_verified": true,
+    "name": "Test Customer",
+    "app_metadata": { "role": "customer" },
+    "user_metadata": {}
+  }
+]

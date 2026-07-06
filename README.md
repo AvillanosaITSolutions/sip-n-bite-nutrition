@@ -15,7 +15,8 @@ packages/
 ## Stack
 
 - **Auth**: Auth0 (social: Google, Facebook, Instagram). API validates RS256 JWTs via JWKS.
-- **Roles**: `customer`, `admin`, `super-admin`. First user to sign in becomes `super-admin`; SuperAdmin can promote others from Admin → Users.
+- **Roles**: `customer`, `pos-operator`, `admin`, `super-admin`. First user to sign in becomes `super-admin`; SuperAdmin can promote others from Admin → Users. Roles can also be pre-assigned by email via the `ROLE_EMAIL_MAP` env var (`email:role,email:role`), applied on login.
+- **Test accounts**: `pnpm --filter @snb/api seed:users` pre-provisions one user per role and prints the credentials to create in Auth0. Auth is Auth0-only (no local passwords) — create the matching users in the Auth0 dashboard, keep `ROLE_EMAIL_MAP` in sync, and roles bind on first login.
 - **DB**: Postgres, UUID PKs everywhere. `synchronize: true` in dev — generate proper migrations before production.
 - **Payments**: PayMongo Checkout Sessions. Webhook at `POST /api/payments/paymongo/webhook` marks orders paid. **TODO**: verify the `Paymongo-Signature` header in production.
 - **Notifications**: nodemailer (SMTP) + PhilSMS, fired on order paid.

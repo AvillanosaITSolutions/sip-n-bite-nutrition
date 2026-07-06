@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sip n Bite Nutrition — Mobile App Wireframe</title>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.31.0/tabler-icons.min.css">
+<style>
+:root{
+  --font-sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --surface-2:#ffffff; --surface-1:#f4f6ee; --surface-0:#f9fbf4;
+  --border:#e1e6d6; --border-strong:#cdd5bd;
+  --text-primary:#1f2a15; --text-secondary:#5f6b52; --text-muted:#95a085;
+  --bg-accent:#e6f1fb; --text-accent:#185fa5;
+  --radius:8px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--surface-0);color:var(--text-primary);font-family:var(--font-sans);-webkit-font-smoothing:antialiased}
+.page{max-width:1200px;margin:0 auto;padding:2.5rem 1.5rem 4rem}
+.masthead{margin-bottom:2rem}
+.masthead h1{font-size:26px;font-weight:600;margin:0 0 6px;color:#16340a}
+.masthead p{font-size:14px;color:var(--text-secondary);margin:0;max-width:64ch;line-height:1.6}
+.wf-legend{display:flex;flex-wrap:wrap;gap:10px 20px;margin:1.25rem 0 0;font-size:12.5px;color:var(--text-secondary)}
+.wf-legend b{font-weight:500;color:var(--text-primary)}
+.wf-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.wf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.phone{background:var(--surface-2);border:1px solid var(--border);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 3px rgba(30,50,10,.05)}
+.phone-top{display:flex;align-items:center;justify-content:space-between;padding:7px 13px;border-bottom:1px solid var(--border);background:var(--surface-1)}
+.phone-role{font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px}
+.r-cust{background:#e6f1fb;color:#185fa5}
+.r-pos{background:#faeeda;color:#854f0b}
+.r-admin{background:#eeedfe;color:#3c3489}
+.phone-time{font-size:10px;color:var(--text-muted)}
+.scr{padding:12px 13px;display:flex;flex-direction:column;gap:9px;flex:1}
+.scr h3{font-size:14px;margin:0;font-weight:500;color:#16340a}
+.sub{font-size:11px;color:var(--text-secondary);margin:0;line-height:1.5}
+.ph-line{height:8px;border-radius:4px;background:var(--surface-1)}
+.ph-img{border-radius:8px;overflow:hidden;display:block;width:100%}
+.ph-img img{display:block;width:100%;height:100%;object-fit:cover}
+.ph-drop{background:var(--surface-1);border:1px dashed var(--border-strong);border-radius:8px;display:flex;align-items:center;justify-content:center;gap:6px;color:var(--text-muted);font-size:11px}
+.card{border:1px solid var(--border);border-radius:10px;padding:8px;display:flex;gap:8px;align-items:center}
+.card .thumb{width:36px;height:36px;border-radius:7px;overflow:hidden;flex:none;background:var(--surface-1)}
+.card .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.card .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.badge{display:inline-block;font-size:9.5px;padding:1.5px 6px;border-radius:20px;background:var(--surface-1);color:var(--text-secondary);border:1px solid var(--border)}
+.badge.ok{background:#e1f5ee;color:#0f6e56;border-color:#9fe1cb}
+.badge.warn{background:#faeeda;color:#854f0b;border-color:#fac775}
+.badge.info{background:#e6f1fb;color:#185fa5;border:none}
+.badge.mut{background:var(--surface-1)}
+.btn{font-size:11px;text-align:center;padding:7px;border-radius:var(--radius);border:1px solid var(--border-strong);color:var(--text-primary)}
+.btn.pri{background:#16340a;color:#fff;border:none}
+.btn.soc{display:flex;align-items:center;justify-content:center;gap:7px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.field{border:1px solid var(--border);border-radius:var(--radius);padding:6px 8px;font-size:11px;color:var(--text-muted);background:var(--surface-1)}
+.seg{display:flex;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;font-size:10.5px}
+.seg span{flex:1;text-align:center;padding:6px 2px;color:var(--text-secondary)}
+.seg span.on{background:#16340a;color:#fff}
+.nav{display:flex;justify-content:space-around;padding:7px 4px;border-top:1px solid var(--border);background:var(--surface-1);font-size:9px;color:var(--text-muted)}
+.nav i{display:block;font-size:16px;margin-bottom:2px;text-align:center}
+.nav span{text-align:center}
+.nav .act{color:#5a8f2b}
+.step{display:flex;gap:8px;align-items:flex-start;font-size:11px}
+.step .dotcol{display:flex;flex-direction:column;align-items:center;flex:none;padding-top:2px}
+.step .sd{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--border-strong)}
+.step .sd.done{background:#1d9e75;border-color:#1d9e75}
+.step .sd.now{background:#ef9f27;border-color:#ef9f27}
+.step .sl{width:1.5px;flex:1;min-height:14px;background:var(--border)}
+.step .st{color:var(--text-secondary);padding-bottom:8px}
+.step .st.cur{color:var(--text-primary);font-weight:500}
+.mcard{background:var(--surface-1);border-radius:var(--radius);padding:8px 9px}
+.mcard .lbl{font-size:10px;color:var(--text-secondary)}
+.mcard .val{font-size:17px;font-weight:500;margin-top:2px;color:#16340a}
+.tabbar{display:flex;gap:4px;font-size:10px;flex-wrap:wrap}
+.tab{padding:4px 8px;border-radius:20px;border:1px solid var(--border);color:var(--text-secondary)}
+.tab.on{background:#eeedfe;color:#3c3489;border-color:#cecbf6}
+.grip{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.tile{border:1px solid var(--border);border-radius:8px;padding:6px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9.5px;color:var(--text-secondary)}
+.tile img{width:38px;height:38px}
+.small{font-size:10px;color:var(--text-muted)}
+.divlbl{font-size:10px;color:var(--text-muted);margin-top:2px}
+.scrp{margin-top:6px;font-size:11px;color:var(--text-secondary);text-align:center;font-weight:500}
+.foot{margin-top:2.5rem;font-size:12px;color:var(--text-muted);line-height:1.7}
+.foot code{background:var(--surface-1);padding:1px 5px;border-radius:4px;font-size:11px;color:#3a4432}
+@media print{body{background:#fff}.phone{break-inside:avoid;box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="masthead">
+    <img src="assets/logo.svg" alt="Sip n Bite Nutrition" width="200" height="58" style="display:block;margin-bottom:14px">
+    <h1>Mobile app wireframe</h1>
+    <p>Low-fidelity screen inventory covering every feature across the three roles. Placeholder lines stand in for copy; images, badges, and controls reflect real data from the app's routes, schemas, and API.</p>
+    <div class="wf-legend">
+      <span><span class="wf-dot" style="background:#378add"></span><b>Customer</b> — shop &amp; order</span>
+      <span><span class="wf-dot" style="background:#ef9f27"></span><b>POS operator</b> — in-store</span>
+      <span><span class="wf-dot" style="background:#7f77dd"></span><b>Admin / super-admin</b> — back office</span>
+    </div>
+  </header>
+
+  <div class="wf-grid">
+
+    <div class="phone">
+      <div class="phone-top"><span class="phone-role r-cust">Customer</span><span class="phone-time">9:41</span></div>
+      <div class="scr">
+        <div class="ph-img" style="height:56px;border:1px solid var(--border)"><img src="assets/logo.svg" alt="logo" style="object-fit:contain;padding:8px;background:#fff"></div>
+        <h3>Sign in</h3>
+        <p class="sub">Auth0 social login. First account becomes super-admin.</p>
+        <div class="btn soc"><i class="ti ti-brand-google"></i>Continue with Google</div>
+        <div class="btn soc"><i class="ti ti-brand-facebook"></i>Continue with Facebook</div>
+        <div class="btn soc"><i class="ti ti-brand-instagram"></i>Continue with Instagram</div>
+        <div class="divlbl">Captures phone for SMS on first login</div>
+        <div class="field">Mobile number</div>
+      </div>
+      <div class="scrp">1 · Sign in</div>
+    </div>
+
+    <div class="phone">
+      <div class="phone-top"><span class="phone-role r-cust">Customer</span><span class="phone-time">9:41</span></div>
+      <div class="scr">
+        <div class="row"><h3>Sip n Bite</h3><i class="ti ti-shopping-cart"></i></div>
+        <div class="ph-img" style="height:82px"><img src="assets/hero.svg" alt="hero banner"></div>
+        <div class="grip">
+          <div class="btn"><i class="ti ti-cup"></i> Menu</div>
+          <div class="btn"><i class="ti ti-basket"></i> Shop</div>
+        </div>
+        <p class="divlbl">Featured shakes</p>
+        <div class="card"><div class="thumb"><img src="assets/shake-berry.svg" alt=""></div><div class="body"><div class="ph-line" style="width:75%"></div><span class="badge ok">240 kcal</span></div></div>
+        <div class="card"><div class="thumb"><img src="assets/shake-green.svg" alt=""></div><div class="body"><div class="ph-line" style="width:60%"></div><span class="badge ok">310 kcal</span></div></div>
+      </div>
+      <div class="nav">
+        <span class="act"><i class="ti ti-home"></i>Home</span>
+        <span><i class="ti ti-cup"></i>Menu</span>
+        <span><i class="ti ti-basket"></i>Shop</span>
+        <span><i class="ti ti-receipt"></i>Orders</span>
+      </div>
+      <div class="scrp">2 · Home</div>
+    </div>
+
+    <div class="phone">
+      <div class="phone-top"><span class="phone-role r-cust">Customer</span><span class="phone-time">9:41</span></div>
+      <div class="scr">
+        <h3>Menu</h3>
+        <div class="seg"><span class="on">Shakes</span><span>Snacks</span></div>
+        <div class="card"><div class="thumb"><img src="assets/shake-berry.svg" alt=""></div><div class="body">
+          <div class="ph-line" style="width:70%"></div>
+          <div class="row"><span class="badge ok">240 kcal</span><span class="small">₱150</span></div>
+          <span class="badge info">protein · immunity</span>
+        </div></div>
+        <div class="card"><div class="thumb"><img src="assets/shake-mango.svg" alt=""></div><div class="body">
+          <div class="ph-line" style="width:80%"></div>
+          <div class="row"><span class="badge ok">300 kcal</span><span class="small">₱180</span></div>
+          <span class="badge info">energy · fiber</span>
+        </div></div>
+        <div class="card"><div class="thumb"><img src="assets/snack.svg" alt=""></div><div class="body">
+          <div class="ph-line" style="width:55%"></div>
+          <div class="row"><span class="badge mut">sold out</span><span class="small">₱90</span></div>
+        </div></div>
+      </div>
+      <div class="nav">
+        <span><i class="ti ti-home"></i>Home</span>
+        <span class="act"><i class="ti ti-cup"></i>Menu</span>
+        <span><i class="ti ti-basket"></i>Shop</span>
+        <span><i class="ti ti-receipt"></i>Orders</span>
+      </div>
+      <div class="scrp">3 · Menu</div>
+    </div>
+
+    <div class="phone">
+      <div class="phone-top"><span class="phone-role r-cust">Customer</span><span class="phone-time">9:41</span></div>
+      <div class="scr">
+        <div class="row"><h3>Shop</h3><i class="ti ti-search"></i></div>
+        <p class="sub">Packaged products · stock &amp; pre-order</p>
+        <div class="card"><div class="thumb"><img src="assets/product-1.svg" alt=""></div><div class="body">
+          <div class="ph-line" style="width:78%"></div>
+          <div class="row"><span class="badge ok">In stock · 24</span><span class="small">₱420</span></div>
+          <span class="badge mut">pickup or delivery</span>
+        </div></div>
+        <div class="card"><div class="thumb"><img src="assets/product-2.svg" alt=""></div><div class="body">
+          <div class="ph-line" style="width:65%"></div>
+          <div class="row"><span class="badge warn">Pre-order</span><span class="small">₱650</span></div>
+          <span class="badge mut">delivery only</span>
+        </div></div>
+        <div class="card"><div class="thumb"><img src="assets/product-3.svg" alt=""></div><div class="body">
+          <div class="ph-line" style="width:70%"></div>
+          <div class="row"><span class="badge ok">In stock · 3</span><span class="small">₱280</span></div>
+        </div></div>
+        <div class="btn pri">Add to cart</div>
+      </div>
+      <div class="nav">
+        <span><i class="ti ti-home"></i>Home</span>
+        <span><i class="ti ti-cup"></i>Menu</span>
+        <span class="act"><i class="ti ti-basket"></i>Shop</span>
+        <span><i class="ti ti-receipt"></i>Orders</span>
+      </div>
+      <div class="scrp">4 · Shop</div>
+    </div>
+
+    <div class="phone">
+      <div class="phone-top"><span class="phone-role r-cust">Customer</span><span class="phone-time">9:41</span></div>
+      <div class="scr">
+        <h3>Cart &amp; checkout</h3>
+        <div class="card"><div class="thumb"><img src="assets/shake-berry.svg" alt=""></div><div class="body"><div class="ph-line" style="width:60%"></div><div class="row"><span class="small">x2</span><span class="small">₱300</span></div></div></div>
+        <div class="card"><div class="thumb"><img src="assets/product-1.svg" alt=""></div><div class="body"><div class="ph-line" style="width:70%"></div><div class="row"><span class="small">x1</span><span class="small">₱420</span></div></div></div>
+        <div class="divlbl">Fulfillment</div>
+        <div class="seg"><span class="on">Pickup</span><span>Delivery</span></div>
+        <div class="field">Delivery address</div>
+        <div class="divlbl">Payment</div>
+        <div class="seg"><span class="on">Online (PayMongo)</span><span>At hub</span></div>
+        <div class="field">Notes (optional)</div>
+        <div class="row"><span class="small">Total</span><b style="font-size:13px;color:#16340a">₱720</b></div>
+        <div class="btn pri">Place order</div>
+      </div>
+      <div class="scrp">5 · Cart &amp; checkout</div>
+    </div>
+
+    <div class="phone">
+      <div class="phone-top"><span class="phone-role r-cust">Customer</span><span class="phone-time">9:41</span></div>
+      <div class="scr">
+        <h3>My orders</h3>
+        <div class="card"><div class="body">
+          <div class="row"><span class="small">#A1042</span><span class="badge warn">Preparing</span></div>
+          <div class="ph-line" style="width:80%"></div>
+          <span class="small">2 items · ₱720 · pickup</span>
+        </div><i class="ti ti-chevron-right" style="color:var(--text-muted)"></i></div>
+        <div class="card"><div class="body">
+          <div class="row"><span class="small">#A1038</span><span class="badge info">Out for delivery</span></div>
+          <div class="ph-line" style="width:65%"></div>
+          <span class="small">1 item · ₱420 · delivery</span>
+        </div><i class="ti ti-chevron-right" style="color:var(--text-muted)"></i></div>
+        <div class="card"><div class="body">
+          <div class="row"><span class="small">#A1021</span><span class="badge ok">Completed</span></div>
+          <div class="ph-line" style="width:70%"></div>
+          <span class="small">3 items · ₱1,150</span>
+        </div><i class="ti ti-chevron-right" style="color:var(--text-muted)"></i></div>
+      </div>
+      <div class="nav">
+        <span><i class="ti ti-home"></i>Home</span>
+        <span><i class="ti ti-cup"></i>Menu</span>
+        <span><i class="ti ti-basket"></i>Shop</span>
+        <span class="act"><i class="ti ti-receipt"></i>Orders</span>
+      </div>
+      <div class="scrp">6 · Order history</div>
+    </div>
+
+    <div class="phone">
+      <div class="phone-top"><span class="phone-role r-cust">Customer</span><span class="phone-time">9:41</span></div>
+      <div class="scr">
+        <div class="row"><h3>Order #A1042</h3><span class="badge warn">Preparing</span></div>
+        <p class="sub">Placed 9:12 AM · Pickup at hub</p>
+        <div style="margin-top:2px">
+          <div class="step"><div class="dotcol"><div class="sd done"></div><div class="sl"></div></div><div class="st">Paid</div></div>
+          <div class="step"><div class="dotcol"><div class="sd now"></div><div class="sl"></div></div><div class="st cur">Preparing</div></div>
+          <div class="step"><div class="dotcol"><div class="sd"></div><div class="sl"></div></div><div class="st">Ready for pickup</div></div>
+          <div class="step"><div class="dotcol"><div class="sd"></div></div><div class="st">Completed</div></div>
+        </div>
+        <div class="divlbl">Items</div>
+        <div class="card"><div class="thumb"><img src="assets/shake-berry.svg" alt=""></div><div class="body"><div class="ph-line" style="width:60%"></div><span class="small">x2 · ₱300</span></div></div>
+        <div class="mcard"><div class="lbl">Notifications sent</div><div class="small" style="margin-top:3px"><i class="ti ti-mail"></i> email · <i class="ti ti-device-mobile-message"></i> SMS</div></div>
+      </div>
+      <div class="scrp">7 · Order tracking</div>
+    </div>
+
+    <div class="phone">
+      <div class="phone-top"><span class="phone-role r-pos">POS operator</span><span class="phone-time">9:41</span></div>
+      <div class="scr">
+        <div class="row"><h3>POS</h3><span class="badge warn">Walk-in</span></div>
+        <div class="tabbar"><span class="tab on">Shakes</span><span class="tab">Snacks</span><span class="tab">Products</span></div>
+        <div class="grip">
+          <div class="tile"><img src="assets/shake-green.svg" alt="">Shake A · ₱150</div>
+          <div class="tile"><img src="assets/shake-berry.svg" alt="">Shake B · ₱180</div>
+          <div class="tile"><img src="assets/snack.svg" alt="">Snack · ₱90</div>
+          <div class="tile"><img src="assets/product-1.svg" alt="">Bundle · ₱420</div>
+        </div>
+        <div class="mcard"><div class="row"><span class="lbl">Cart · 3 items</span><b style="font-size:13px;color:#16340a">₱480</b></div></div>
+        <div class="field">Customer name / phone</div>
+        <div class="field">Cash received → change ₱20</div>
+        <div class="btn pri">Charge &amp; print</div>
+      </div>
+      <div class="scrp">8 · POS walk-in</div>
+    </div>
+
+    <div class="phone">
+      <div class="phone-top"><span class="phone-role r-admin">Admin</span><span class="phone-time">9:41</span></div>
+      <div class="scr">
+        <h3>Dashboard</h3>
+        <div class="grip">
+          <div class="mcard"><div class="lbl">Today sales</div><div class="val">₱8.4k</div></div>
+          <div class="mcard"><div class="lbl">Orders</div><div class="val">32</div></div>
+          <div class="mcard"><div class="lbl">Preparing</div><div class="val">5</div></div>
+          <div class="mcard"><div class="lbl">Low stock</div><div class="val">3</div></div>
+        </div>
+        <div class="ph-img" style="height:74px;border:1px solid var(--border)"><img src="assets/chart.svg" alt="sales chart"></div>
+        <div class="tabbar" style="margin-top:2px">
+          <span class="tab on">Orders</span><span class="tab">Menu</span><span class="tab">Products</span><span class="tab">Users</span><span class="tab">POS</span>
+        </div>
+      </div>
+      <div class="nav">
+        <span class="act"><i class="ti ti-layout-dashboard"></i>Home</span>
+        <span><i class="ti ti-receipt"></i>Orders</span>
+        <span><i class="ti ti-cup"></i>Menu</span>
+        <span><i class="ti ti-users"></i>Users</span>
+      </div>
+      <div class="scrp">9 · Admin dashboard</div>
+    </div>
+
+    <div class="phone">
+      <div class="phone-top"><span class="phone-role r-admin">Admin</span><span class="phone-time">9:41</span></div>
+      <div class="scr">
+        <div class="row"><h3>Orders</h3><i class="ti ti-filter"></i></div>
+        <div class="tabbar"><span class="tab on">All</span><span class="tab">Paid</span><span class="tab">Preparing</span><span class="tab">Delivery</span></div>
+        <div class="card"><div class="body">
+          <div class="row"><span class="small">#A1042</span><span class="badge warn">Preparing</span></div>
+          <span class="small">Maya R. · pickup · ₱720</span>
+          <div class="seg" style="margin-top:2px"><span>Ready</span><span class="on">Advance ›</span></div>
+        </div></div>
+        <div class="card"><div class="body">
+          <div class="row"><span class="small">#A1041</span><span class="badge info">Awaiting pay</span></div>
+          <span class="small">Jon D. · delivery · ₱420</span>
+        </div></div>
+        <div class="card"><div class="body">
+          <div class="row"><span class="small">#A1039</span><span class="badge ok">Completed</span></div>
+          <span class="small">Walk-in · ₱250</span>
+        </div></div>
+      </div>
+      <div class="nav">
+        <span><i class="ti ti-layout-dashboard"></i>Home</span>
+        <span class="act"><i class="ti ti-receipt"></i>Orders</span>
+        <span><i class="ti ti-cup"></i>Menu</span>
+        <span><i class="ti ti-users"></i>Users</span>
+      </div>
+      <div class="scrp">10 · Admin orders</div>
+    </div>
+
+    <div class="phone">
+      <div class="phone-top"><span class="phone-role r-admin">Admin</span><span class="phone-time">9:41</span></div>
+      <div class="scr">
+        <div class="row"><h3>Menu &amp; products</h3><span class="badge info"><i class="ti ti-plus"></i> New</span></div>
+        <div class="tabbar"><span class="tab on">Menu items</span><span class="tab">Products</span></div>
+        <div class="card"><div class="thumb"><img src="assets/shake-green.svg" alt=""></div><div class="body">
+          <div class="ph-line" style="width:70%"></div>
+          <div class="row"><span class="badge ok">Available</span><span class="small">240 kcal · ₱150</span></div>
+        </div><i class="ti ti-edit" style="color:var(--text-muted)"></i></div>
+        <div class="card"><div class="thumb"><img src="assets/product-3.svg" alt=""></div><div class="body">
+          <div class="ph-line" style="width:60%"></div>
+          <div class="row"><span class="badge warn">Stock 3</span><span class="small">−/＋ adjust</span></div>
+        </div><i class="ti ti-edit" style="color:var(--text-muted)"></i></div>
+        <div class="divlbl">Edit form</div>
+        <div class="field">Name · category · price</div>
+        <div class="field">Calories · benefits[]</div>
+        <div class="ph-drop" style="height:40px"><i class="ti ti-photo"></i> upload image</div>
+      </div>
+      <div class="scrp">11 · Menu &amp; products</div>
+    </div>
+
+    <div class="phone">
+      <div class="phone-top"><span class="phone-role r-admin">Super-admin</span><span class="phone-time">9:41</span></div>
+      <div class="scr">
+        <div class="row"><h3>Users &amp; roles</h3><i class="ti ti-search"></i></div>
+        <p class="sub">Super-admin only · promote or demote</p>
+        <div class="card"><div class="thumb"><img src="assets/avatar-1.svg" alt=""></div><div class="body">
+          <div class="ph-line" style="width:65%"></div>
+          <span class="badge r-admin" style="border:none">super-admin</span>
+        </div></div>
+        <div class="card"><div class="thumb"><img src="assets/avatar-3.svg" alt=""></div><div class="body">
+          <div class="ph-line" style="width:55%"></div>
+          <div class="row"><span class="badge r-admin" style="border:none">admin</span><span class="small">change ▾</span></div>
+        </div></div>
+        <div class="card"><div class="thumb"><img src="assets/avatar-2.svg" alt=""></div><div class="body">
+          <div class="ph-line" style="width:70%"></div>
+          <div class="row"><span class="badge r-pos" style="border:none">pos-operator</span><span class="small">change ▾</span></div>
+        </div></div>
+        <div class="card"><div class="thumb"><img src="assets/avatar-4.svg" alt=""></div><div class="body">
+          <div class="ph-line" style="width:60%"></div>
+          <div class="row"><span class="badge">customer</span><span class="small">change ▾</span></div>
+        </div></div>
+      </div>
+      <div class="nav">
+        <span><i class="ti ti-layout-dashboard"></i>Home</span>
+        <span><i class="ti ti-receipt"></i>Orders</span>
+        <span><i class="ti ti-cup"></i>Menu</span>
+        <span class="act"><i class="ti ti-users"></i>Users</span>
+      </div>
+      <div class="scrp">12 · Users &amp; roles</div>
+    </div>
+
+  </div>
+
+  <p class="foot">
+    Wireframe generated from the Sip n Bite codebase — routes (<code>App.tsx</code>), shared enums/schemas, and the API surface in the README.
+    Sign-in, image upload, and dashboard charts are shown as intended designs; they are listed as TODOs and not yet built.
+    Order statuses reflect the full flow: pending → awaiting payment → paid → preparing → ready for pickup / out for delivery → completed, plus cancelled and refunded.
+    Image assets live in <code>assets/</code>.
+  </p>
+</div>
+</body>
+</html>

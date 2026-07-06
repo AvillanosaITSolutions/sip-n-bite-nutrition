@@ -26,7 +26,21 @@
       "Read(//tmp/snb-deploy-test/node_modules/@snb/shared/**)",
       "Read(//tmp/snb-deploy-test/dist/**)",
       "Bash(ls public *)",
-      "Bash(ls src/assets)"
+      "Bash(ls src/assets)",
+      "mcp__visualize__read_me",
+      "mcp__visualize__show_widget",
+      "Bash(node -e \"console.log\\(require\\('pptxgenjs'\\) ? 'pptxgenjs ok' : 'no'\\)\")",
+      "Bash(npm ls *)",
+      "PowerShell($paths = @\\(\"C:\\\\Program Files\\\\LibreOffice\\\\program\\\\soffice.exe\",\"C:\\\\Program Files \\(x86\\)\\\\LibreOffice\\\\program\\\\soffice.exe\"\\); $found=$paths | Where-Object { Test-Path $_ }; if\\($found\\){$found}else{\"none\"}; \\(Get-Command soffice -ErrorAction SilentlyContinue\\).Source)",
+      "Bash(SKILL=\"C:/Users/kmavillanosa/AppData/Roaming/Claude/local-agent-mode-sessions/skills-plugin/914e8807-7b91-4f66-976d-d4d227e2c132/0303eb9d-340d-41b6-acea-fcec2e5c468c/skills/pptx\"; ls -1 \"$SKILL/scripts\")",
+      "Bash(python -c \"import pptx; print\\('pptx', pptx.__version__\\)\")",
+      "Bash(python -)",
+      "Bash(PYTHONUTF8=1 python -)",
+      "Bash(node gen-deck.js)",
+      "Bash(cp sip-n-bite-wireframe-deck.pptx \"C:/Users/kmavillanosa/repo/sip-n-bite-nutrition/sip-n-bite-wireframe-deck.pptx\")",
+      "Bash(node gen-assets.js)",
+      "PowerShell(pnpm --filter @snb/api typecheck 2>&1)",
+      "PowerShell(docker compose up -d postgres 2>&1)"
     ]
   }
 }

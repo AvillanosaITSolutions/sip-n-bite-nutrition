@@ -6,6 +6,13 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["--filter", "web", "dev"],
       "port": 5173
+    },
+    {
+      "name": "wireframe",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["--yes", "http-server", "wireframe", "-p", "4599", "-c-1"],
+      "port": 4599,
+      "autoPort": true
     }
   ]
 }

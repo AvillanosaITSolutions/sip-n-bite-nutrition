@@ -22,7 +22,7 @@ export class UsersService {
   constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
   async upsertFromAuth0(payload: Auth0JwtPayload, accessToken?: string): Promise<User> {
-    const existing = await this.repo.findOne({ where: { auth0Sub: payload.sub } });
+    let existing = await this.repo.findOne({ where: { auth0Sub: payload.sub } });
 
     // Auth0 access tokens often lack email/name/picture. If anything is missing,
     // hit /userinfo (which is authorized by the same access token) to enrich.
@@ -44,6 +44,18 @@ export class UsersService {
     const name = payload.name ?? info?.name;
     const picture = payload.picture ?? info?.picture;
     const requestedRole = this.getRoleForEmail(email);
+
+    // Pre-seeded rows (e.g. from the users seed) carry a placeholder auth0Sub.
+    // If there's no sub match but we recognize the email, adopt that row and
+    // bind it to this real Auth0 identity so roles seeded ahead of time take
+    // effect on first login (and we avoid the unique-email constraint).
+    if (!existing && email) {
+      const byEmail = await this.repo.findOne({ where: { email } });
+      if (byEmail) {
+        byEmail.auth0Sub = payload.sub;
+        existing = byEmail;
+      }
+    }
 
     if (existing) {
       if (email) existing.email = email;
@@ -83,10 +95,38 @@ export class UsersService {
 
   private getRoleForEmail(email?: string): Role | undefined {
     if (!email) return undefined;
-    const normalized = email.trim().toLowerCase();
-    if (normalized === "hello@itsavillanosa.com") return Role.SuperAdmin;
-    if (normalized === "careers.kmavillanosa@gmail.com") return Role.Admin;
-    return undefined;
+    return UsersService.roleEmailMap().get(email.trim().toLowerCase());
+  }
+
+  /**
+   * email -> role assignment map. Built-in defaults are extended/overridden by
+   * the ROLE_EMAIL_MAP env var, formatted as `email:role,email:role`
+   * (roles: customer, pos-operator, admin, super-admin). Built once and cached.
+   */
+  private static _roleEmailMap: Map<string, Role> | null = null;
+  private static roleEmailMap(): Map<string, Role> {
+    if (UsersService._roleEmailMap) return UsersService._roleEmailMap;
+
+    const map = new Map<string, Role>([
+      ["hello@itsavillanosa.com", Role.SuperAdmin],
+      ["careers.kmavillanosa@gmail.com", Role.Admin],
+    ]);
+
+    for (const pair of (process.env.ROLE_EMAIL_MAP ?? "").split(",")) {
+      const [rawEmail, rawRole] = pair.split(":").map((s) => s?.trim());
+      if (!rawEmail || !rawRole) continue;
+      const role = (Object.values(Role) as string[]).includes(rawRole)
+        ? (rawRole as Role)
+        : undefined;
+      if (!role) {
+        UsersService.log.warn(`ROLE_EMAIL_MAP: unknown role "${rawRole}" for ${rawEmail} — skipped`);
+        continue;
+      }
+      map.set(rawEmail.toLowerCase(), role);
+    }
+
+    UsersService._roleEmailMap = map;
+    return map;
   }
 
   list() {

@@ -12,6 +12,8 @@
     "migration:run": "typeorm-ts-node-commonjs migration:run -d src/data-source.ts",
     "seed:herbalife": "ts-node src/seeds/herbalife.seed.ts",
     "seed:menu": "ts-node src/seeds/menu.seed.ts",
+    "seed:users": "ts-node src/seeds/users.seed.ts",
+    "seed:auth0-users": "ts-node src/seeds/auth0-users.seed.ts",
     "seed": "pnpm seed:menu && pnpm seed:herbalife",
     "seed:product-images": "ts-node src/seeds/link-images.ts"
   },
