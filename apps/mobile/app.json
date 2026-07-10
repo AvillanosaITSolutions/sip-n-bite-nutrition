@@ -25,6 +25,9 @@
       "auth0Domain": "dev-wy7vwm5m.us.auth0.com",
       "auth0ClientId": "v97BGb1dTBybBJthzAXYW6x5oAv1r6e5",
       "auth0Audience": "https://api.sipnbite.local"
-    }
+    },
+    "plugins": [
+      "expo-secure-store"
+    ]
   }
 }
