@@ -13,6 +13,12 @@
       "runtimeArgs": ["--yes", "http-server", "wireframe", "-p", "4599", "-c-1"],
       "port": 4599,
       "autoPort": true
+    },
+    {
+      "name": "mobile-web",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@snb/mobile", "exec", "expo", "start", "--web", "--port", "8082"],
+      "port": 8082
     }
   ]
 }

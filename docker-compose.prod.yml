@@ -20,7 +20,9 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
-      WEB_ORIGIN: https://88.222.245.88.sslip.io
+      # Comma-separated allowlist: production web app + local dev servers
+      # (Vite web on 5173, Expo web on 8081/8082) so browser-based dev can hit the API.
+      WEB_ORIGIN: https://88.222.245.88.sslip.io,http://localhost:5173,http://localhost:8081,http://localhost:8082
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@visa-reminder-postgres:5432/${POSTGRES_DB}
       AUTH0_DOMAIN: ${AUTH0_DOMAIN}
       AUTH0_AUDIENCE: ${AUTH0_AUDIENCE}

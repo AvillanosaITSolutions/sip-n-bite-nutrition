@@ -9,7 +9,9 @@ import { AppModule } from "./app.module";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { bodyParser: true });
-  app.enableCors({ origin: process.env.WEB_ORIGIN ?? true, credentials: true });
+  // WEB_ORIGIN accepts a comma-separated list, e.g. "https://example.com,http://localhost:8082"
+  const origins = process.env.WEB_ORIGIN?.split(",").map((o) => o.trim()).filter(Boolean);
+  app.enableCors({ origin: origins?.length ? origins : true, credentials: true });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   // Static uploads — drop files into apps/api/uploads/<subdir>/<file>.

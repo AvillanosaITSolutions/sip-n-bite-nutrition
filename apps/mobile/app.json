@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "Sip 'N Bite",
+    "slug": "sip-n-bite",
+    "version": "0.0.1",
+    "orientation": "portrait",
+    "scheme": "snbmobile",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#FBF6EA"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "ph.sipnbite.mobile"
+    },
+    "android": {
+      "package": "ph.sipnbite.mobile",
+      "adaptiveIcon": {
+        "backgroundColor": "#FBF6EA"
+      }
+    },
+    "extra": {
+      "apiUrl": "https://api.88.222.245.88.sslip.io",
+      "auth0Domain": "dev-wy7vwm5m.us.auth0.com",
+      "auth0ClientId": "v97BGb1dTBybBJthzAXYW6x5oAv1r6e5",
+      "auth0Audience": "https://api.sipnbite.local"
+    }
+  }
+}
